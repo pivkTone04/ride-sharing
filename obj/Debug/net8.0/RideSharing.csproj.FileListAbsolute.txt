@@ -257,3 +257,4 @@ C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\refint\Ride
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\RideSharing.pdb
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\RideSharing.genruntimeconfig.cache
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\ref\RideSharing.dll
+C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\RideSharing.sourcelink.json

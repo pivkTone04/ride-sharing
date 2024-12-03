@@ -1,7 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
+using RideSharing.Data;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("RideSharingContext");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<RideSharingContext>(options =>
+
+options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
