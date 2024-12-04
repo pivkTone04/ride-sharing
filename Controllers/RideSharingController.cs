@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RideSharing.Data;
 using RideSharing.Models;
-
+using Microsoft.AspNetCore.Authorization;
 namespace RideSharing.Controllers
 {
+    [Authorize]
     public class RideSharingController : Controller
     {
         private readonly RideSharingContext _context;

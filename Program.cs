@@ -1,15 +1,20 @@
 using RideSharing.Data;
 using Microsoft.EntityFrameworkCore;
-
+using RideSharing.Models;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("RideSharingContext");
 // Add services to the container.
+
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<RideSharingContext>(options =>
 
 options.UseSqlServer(connectionString));
-
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<RideSharingContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,11 +29,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapRazorPages();
 app.Run();
