@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RideSharing.Models
 {
@@ -8,8 +9,10 @@ namespace RideSharing.Models
     {
         public int Id { get; set; }
 
+        [BindNever]
         [Required]
         public string DriverId { get; set; }
+
         public ApplicationUser Driver { get; set; }
 
         [Required]

@@ -444,7 +444,7 @@ namespace RideSharing.Migrations
                     b.HasOne("RideSharing.Models.ApplicationUser", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Driver");

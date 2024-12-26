@@ -19,6 +19,12 @@ namespace RideSharing.Data
         {
             base.OnModelCreating(modelBuilder);
 
+           modelBuilder.Entity<Vehicle>()
+        .HasOne(v => v.Driver)
+        .WithMany()
+        .HasForeignKey(v => v.DriverId)
+        .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Ride>()
                 .HasOne(r => r.Driver)
                 .WithMany(u => u.Rides)
