@@ -1,9 +1,21 @@
 using Microsoft.AspNetCore.Identity;
-namespace RideSharing.Models;
+using System.ComponentModel.DataAnnotations;
 
-public class ApplicationUser : IdentityUser
+namespace RideSharing.Models
 {
-public string? FirstName { get; set; }
-     public string? LastName { get; set; }
-     public string? City { get; set; }
+    public class ApplicationUser : IdentityUser
+    {
+        [Required]
+        [StringLength(100)]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string LastName { get; set; }
+
+        public string? City { get; set; }
+
+        public ICollection<Ride> Rides { get; set; }
+        public ICollection<RideRequest> RideRequests { get; set; }
+    }
 }

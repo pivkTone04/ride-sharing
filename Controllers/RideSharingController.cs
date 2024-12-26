@@ -8,34 +8,36 @@ using Microsoft.EntityFrameworkCore;
 using RideSharing.Data;
 using RideSharing.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 namespace RideSharing.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class RideSharingController : Controller
     {
         private readonly RideSharingContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RideSharingController(RideSharingContext context)
+        public RideSharingController(RideSharingContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: RideSharing
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            var users = await _userManager.Users.ToListAsync();
+            return View(users);
         }
 
-        // GET: RideSharing/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -44,37 +46,39 @@ namespace RideSharing.Controllers
             return View(user);
         }
 
-        // GET: RideSharing/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: RideSharing/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,LastName,FirstMidName")] User user)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,City,Email")] ApplicationUser user, string password)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                user.UserName = user.Email;
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
             return View(user);
         }
 
-        // GET: RideSharing/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -82,14 +86,11 @@ namespace RideSharing.Controllers
             return View(user);
         }
 
-        // POST: RideSharing/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,FirstName,LastName,City,Email")] ApplicationUser user)
         {
-            if (id != user.ID)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -98,12 +99,31 @@ namespace RideSharing.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    var existingUser = await _userManager.FindByIdAsync(id);
+                    if (existingUser == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingUser.FirstName = user.FirstName;
+                    existingUser.LastName = user.LastName;
+                    existingUser.City = user.City;
+                    existingUser.Email = user.Email;
+                    existingUser.UserName = user.Email;
+
+                    var result = await _userManager.UpdateAsync(existingUser);
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View(user);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.ID))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -117,16 +137,14 @@ namespace RideSharing.Controllers
             return View(user);
         }
 
-        // GET: RideSharing/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -135,24 +153,30 @@ namespace RideSharing.Controllers
             return View(user);
         }
 
-        // POST: RideSharing/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
+                var result = await _userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(user);
+                }
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string id)
         {
-            return _context.Users.Any(e => e.ID == id);
+            return _userManager.Users.Any(e => e.Id == id);
         }
     }
 }

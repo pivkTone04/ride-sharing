@@ -34,6 +34,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -46,8 +50,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Home/Register.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWdpc3Rlci5jc2h0bWw=
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/RideRequest/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZVJlcXVlc3RcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/RideRequest/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZVJlcXVlc3RcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/RideRequest/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZVJlcXVlc3RcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/RideRequest/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZVJlcXVlc3RcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/RideRequest/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZVJlcXVlc3RcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/RideSharing/Create.cshtml]
@@ -70,6 +90,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZVNoYXJpbmdcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Rides/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Rides/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Rides/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Rides/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Rides/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmlkZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -80,6 +120,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Vehicles/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Vehicles/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Vehicles/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Vehicles/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/Vehicles/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVoaWNsZXNcaW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/lanco/OneDrive/Namizje/Skol/IS/RideSharing/Views/_ViewImports.cshtml]

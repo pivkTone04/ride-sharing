@@ -1,0 +1,45 @@
+@model RideSharing.Models.RideRequest
+
+@{
+    ViewData["Title"] = "Delete Ride Request";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Are you sure you want to delete this ride request?</h3>
+<div>
+    <h4>Ride Request</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Ride
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Ride.Origin to @Model.Ride.Destination
+        </dd>
+        <dt class="col-sm-2">
+            Passenger
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Passenger.FirstName @Model.Passenger.LastName
+        </dd>
+        <dt class="col-sm-2">
+            Status
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Status
+        </dd>
+        <dt class="col-sm-2">
+            Requested At
+        </dt>
+        <dd class="col-sm-10">
+            @Model.RequestedAt.ToString("g")
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

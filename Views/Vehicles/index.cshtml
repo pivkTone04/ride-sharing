@@ -1,0 +1,43 @@
+@model IEnumerable<RideSharing.Models.Vehicle>
+
+@{
+    ViewData["Title"] = "Moja Vozila";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj Novo Vozilo</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Proizvajalec</th>
+            <th>Model</th>
+            <th>Letnik</th>
+            <th>Registrska Številka</th>
+            <th>Barva</th>
+            <th>Kapaciteta</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model)
+        {
+            <tr>
+                <td>@vehicle.Make</td>
+                <td>@vehicle.Model</td>
+                <td>@vehicle.Year</td>
+                <td>@vehicle.LicensePlate</td>
+                <td>@vehicle.Color</td>
+                <td>@vehicle.Capacity</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-info btn-sm">Podrobnosti</a> |
+                    <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning btn-sm">Uredi</a> |
+                    <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
