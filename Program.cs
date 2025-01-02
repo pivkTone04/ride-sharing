@@ -2,8 +2,16 @@ using RideSharing.Data;
 using Microsoft.EntityFrameworkCore;
 using RideSharing.Models;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using RideSharing.ViewModels; // Dodajte ta namespace
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Dodajte AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Dodajte druge storitve
+builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("RideSharingContext") 
     ?? throw new InvalidOperationException("Connection string 'RideSharingContext' not found.");
@@ -36,8 +44,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Identity/Account/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
-
-builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 

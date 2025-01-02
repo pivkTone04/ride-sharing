@@ -1,19 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RideSharing.Models
 {
     public class Vehicle
     {
         public int Id { get; set; }
-
-        [BindNever]
-        [Required]
-        public string DriverId { get; set; }
-
-        public ApplicationUser Driver { get; set; }
 
         [Required]
         public string Make { get; set; }
@@ -27,14 +20,18 @@ namespace RideSharing.Models
         [Required]
         public string LicensePlate { get; set; }
 
+        [Required]
         public string Color { get; set; }
 
         [Range(1, 10)]
         public int Capacity { get; set; }
 
+        public string DriverId { get; set; }
+        public ApplicationUser Driver { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public ICollection<Ride> Rides { get; set; }
+        public ICollection<Ride> Rides { get; set; } = new List<Ride>();
     }
 }

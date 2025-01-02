@@ -1,6 +1,6 @@
-using RideSharing.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RideSharing.Models;
 
 namespace RideSharing.Data
 {
@@ -19,35 +19,35 @@ namespace RideSharing.Data
         {
             base.OnModelCreating(modelBuilder);
 
-           modelBuilder.Entity<Vehicle>()
-        .HasOne(v => v.Driver)
-        .WithMany()
-        .HasForeignKey(v => v.DriverId)
-        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Vehicle>()
+                .HasOne(v => v.Driver)
+                .WithMany(u => u.Vehicles)
+                .HasForeignKey(v => v.DriverId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Ride>()
                 .HasOne(r => r.Driver)
                 .WithMany(u => u.Rides)
                 .HasForeignKey(r => r.DriverId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired(false);
 
             modelBuilder.Entity<Ride>()
                 .HasOne(r => r.Vehicle)
                 .WithMany(v => v.Rides)
                 .HasForeignKey(r => r.VehicleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired();
 
             modelBuilder.Entity<RideRequest>()
                 .HasOne(rr => rr.Ride)
                 .WithMany(r => r.RideRequests)
                 .HasForeignKey(rr => rr.RideId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .IsRequired();
 
             modelBuilder.Entity<RideRequest>()
                 .HasOne(rr => rr.Passenger)
                 .WithMany(u => u.RideRequests)
                 .HasForeignKey(rr => rr.PassengerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired();
         }
     }
 }

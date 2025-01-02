@@ -1,10 +1,22 @@
-@model RideSharing.Models.Vehicle
+@model RideSharing.ViewModels.VehicleCreateViewModel
 
 @{
-    ViewData["Title"] = "Dodaj Novo Vozilo";
+    ViewData["Title"] = "Ustvari Novo Vozilo";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2>@ViewData["Title"]</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
 
 <form asp-action="Create" method="post">
     <div class="form-group">
@@ -37,12 +49,10 @@
         <input asp-for="Capacity" class="form-control" />
         <span asp-validation-for="Capacity" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Shrani</button>
+    <div class="form-group">
+        <input type="submit" value="Shrani" class="btn btn-primary" />
+    </div>
 </form>
-
-<div>
-    <a asp-action="Index">Nazaj na seznam vozil</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

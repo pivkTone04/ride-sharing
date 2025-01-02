@@ -15,7 +15,9 @@ namespace RideSharing.Models
 
         public string? City { get; set; }
 
-        public ICollection<Ride> Rides { get; set; }
-        public ICollection<RideRequest> RideRequests { get; set; }
+
+        public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public ICollection<Ride> Rides { get; set; } = new List<Ride>();
+        public ICollection<RideRequest> RideRequests { get; set; } = new List<RideRequest>();
     }
 }

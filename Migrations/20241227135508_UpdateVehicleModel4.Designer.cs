@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RideSharing.Data;
 
@@ -11,9 +12,11 @@ using RideSharing.Data;
 namespace RideSharing.Migrations
 {
     [DbContext(typeof(RideSharingContext))]
-    partial class RideSharingContextModelSnapshot : ModelSnapshot
+    [Migration("20241227135508_UpdateVehicleModel4")]
+    partial class UpdateVehicleModel4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,9 +248,6 @@ namespace RideSharing.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
@@ -256,14 +256,12 @@ namespace RideSharing.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DriverId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("VehicleId")
                         .HasColumnType("int");
@@ -327,6 +325,7 @@ namespace RideSharing.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DriverId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LicensePlate")
@@ -409,12 +408,14 @@ namespace RideSharing.Migrations
                 {
                     b.HasOne("RideSharing.Models.ApplicationUser", "Driver")
                         .WithMany("Rides")
-                        .HasForeignKey("DriverId");
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("RideSharing.Models.Vehicle", "Vehicle")
                         .WithMany("Rides")
                         .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Driver");
@@ -427,7 +428,7 @@ namespace RideSharing.Migrations
                     b.HasOne("RideSharing.Models.ApplicationUser", "Passenger")
                         .WithMany("RideRequests")
                         .HasForeignKey("PassengerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("RideSharing.Models.Ride", "Ride")
@@ -444,8 +445,10 @@ namespace RideSharing.Migrations
             modelBuilder.Entity("RideSharing.Models.Vehicle", b =>
                 {
                     b.HasOne("RideSharing.Models.ApplicationUser", "Driver")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("DriverId");
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Driver");
                 });
@@ -455,8 +458,6 @@ namespace RideSharing.Migrations
                     b.Navigation("RideRequests");
 
                     b.Navigation("Rides");
-
-                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("RideSharing.Models.Ride", b =>

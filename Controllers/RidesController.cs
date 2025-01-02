@@ -1,8 +1,4 @@
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RideSharing.Data;
 using RideSharing.Models;
+using RideSharing.ViewModels;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RideSharing.Controllers
 {
@@ -18,39 +18,16 @@ namespace RideSharing.Controllers
     {
         private readonly RideSharingContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public RidesController(RideSharingContext context, UserManager<ApplicationUser> userManager)
+        public RidesController(RideSharingContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
-        {
-            var rides = _context.Rides.Include(r => r.Driver).Include(r => r.Vehicle);
-            return View(await rides.ToListAsync());
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ride = await _context.Rides
-                .Include(r => r.Driver)
-                .Include(r => r.Vehicle)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ride == null)
-            {
-                return NotFound();
-            }
-
-            return View(ride);
-        }
-
-        public async Task<IActionResult> Create()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -58,26 +35,71 @@ namespace RideSharing.Controllers
                 return Challenge();
             }
 
-            var vehicles = _context.Vehicles.Where(v => v.DriverId == user.Id).ToList();
-            ViewData["VehicleId"] = new SelectList(vehicles, "Id", "Make");
+            var userId = user.Id;
+            var rides = await _context.Rides
+                .Where(r => r.DriverId == userId)
+                .Include(r => r.Vehicle)
+                .ToListAsync();
+
+            return View(rides);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            var userId = _userManager.GetUserId(User);
+            var vehicles = await _context.Vehicles
+                .Where(v => v.DriverId == userId)
+                .ToListAsync();
+
+            ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Origin,Destination,DateTime,VehicleId")] Ride ride)
+        public async Task<IActionResult> Create(RideCreateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-                ride.DriverId = user.Id;
-                _context.Add(ride);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var userId = _userManager.GetUserId(User);
+                var vehicles = await _context.Vehicles
+                    .Where(v => v.DriverId == userId)
+                    .ToListAsync();
+                ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", model.VehicleId);
+                return View(model);
             }
-            var vehicles = _context.Vehicles.Where(v => v.DriverId == _userManager.GetUserId(User)).ToList();
-            ViewData["VehicleId"] = new SelectList(vehicles, "Id", "Make", ride.VehicleId);
-            return View(ride);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                Console.WriteLine("Uporabnik ni prijavljen.");
+                return Unauthorized();
+            }
+
+            var ride = _mapper.Map<Ride>(model);
+            ride.DriverId = user.Id;
+            ride.CreatedAt = DateTime.UtcNow;
+            ride.UpdatedAt = DateTime.UtcNow;
+
+            _context.Add(ride);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Vožnja uspešno shranjena.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Napaka pri shranjevanju vožnje: " + ex.Message);
+                ModelState.AddModelError("", "Prišlo je do napake pri shranjevanju vožnje.");
+                var vehicles = await _context.Vehicles
+                    .Where(v => v.DriverId == user.Id)
+                    .ToListAsync();
+                ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", model.VehicleId);
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -92,54 +114,63 @@ namespace RideSharing.Controllers
             {
                 return NotFound();
             }
-            var vehicles = _context.Vehicles.Where(v => v.DriverId == _userManager.GetUserId(User)).ToList();
-            ViewData["VehicleId"] = new SelectList(vehicles, "Id", "Make", ride.VehicleId);
-            return View(ride);
+
+            var model = _mapper.Map<RideEditViewModel>(ride);
+
+            var vehicles = await _context.Vehicles
+                .Where(v => v.DriverId == ride.DriverId)
+                .ToListAsync();
+            ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", ride.VehicleId);
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Origin,Destination,DateTime,VehicleId")] Ride ride)
+        public async Task<IActionResult> Edit(int id, RideEditViewModel model)
         {
-            if (id != ride.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    var existingRide = await _context.Rides.FindAsync(id);
-                    if (existingRide == null)
-                    {
-                        return NotFound();
-                    }
-
-                    existingRide.Origin = ride.Origin;
-                    existingRide.Destination = ride.Destination;
-                    existingRide.DateTime = ride.DateTime;
-                    existingRide.VehicleId = ride.VehicleId;
-
-                    _context.Update(existingRide);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RideExists(ride.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var vehicles = await _context.Vehicles
+                    .Where(v => v.DriverId == _userManager.GetUserId(User))
+                    .ToListAsync();
+                ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", model.VehicleId);
+                return View(model);
             }
-            var vehicles = _context.Vehicles.Where(v => v.DriverId == _userManager.GetUserId(User)).ToList();
-            ViewData["VehicleId"] = new SelectList(vehicles, "Id", "Make", ride.VehicleId);
-            return View(ride);
+
+            var ride = await _context.Rides.FindAsync(id);
+            if (ride == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(model, ride);
+            ride.UpdatedAt = DateTime.UtcNow;
+
+            try
+            {
+                _context.Update(ride);
+                await _context.SaveChangesAsync();
+                Console.WriteLine("Vožnja uspešno posodobljena.");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RideExists(ride.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -150,7 +181,6 @@ namespace RideSharing.Controllers
             }
 
             var ride = await _context.Rides
-                .Include(r => r.Driver)
                 .Include(r => r.Vehicle)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ride == null)
