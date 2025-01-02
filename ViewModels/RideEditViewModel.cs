@@ -15,7 +15,7 @@ namespace RideSharing.ViewModels
         public string Destination { get; set; }
 
         [Required]
-        public DateTime DateTime { get; set; }
+        public DateTime RideDateTime { get; set; }
 
         [Required]
         public int VehicleId { get; set; }

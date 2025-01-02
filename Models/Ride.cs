@@ -15,8 +15,7 @@ namespace RideSharing.Models
         public string Destination { get; set; }
 
         [Required]
-        public DateTime DateTime { get; set; }
-
+        public DateTime RideDateTime { get; set; } 
         [Required]
         public int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; }
@@ -27,6 +26,6 @@ namespace RideSharing.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public ICollection<RideRequest> RideRequests { get; set; }
+        public ICollection<RideRequest> RideRequests { get; set; } = new List<RideRequest>();
     }
 }

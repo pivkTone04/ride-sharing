@@ -12,9 +12,11 @@ namespace RideSharing.ViewModels
         public string Destination { get; set; }
 
         [Required]
-        public DateTime DateTime { get; set; }
+        [Display(Name = "Datum Prevoza")]
+        public DateTime RideDateTime { get; set; }
 
         [Required]
+        [Display(Name = "Vozilo")]
         public int VehicleId { get; set; }
     }
 }

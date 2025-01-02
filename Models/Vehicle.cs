@@ -32,6 +32,8 @@ namespace RideSharing.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        public ICollection<RideRequest> RideRequests { get; set; } = new List<RideRequest>();
+
         public ICollection<Ride> Rides { get; set; } = new List<Ride>();
     }
 }

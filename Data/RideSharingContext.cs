@@ -38,16 +38,16 @@ namespace RideSharing.Data
                 .IsRequired();
 
             modelBuilder.Entity<RideRequest>()
-                .HasOne(rr => rr.Ride)
-                .WithMany(r => r.RideRequests)
-                .HasForeignKey(rr => rr.RideId)
-                .IsRequired();
-
-            modelBuilder.Entity<RideRequest>()
                 .HasOne(rr => rr.Passenger)
                 .WithMany(u => u.RideRequests)
                 .HasForeignKey(rr => rr.PassengerId)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RideRequest>()
+                .HasOne(rr => rr.Ride)
+                .WithMany(r => r.RideRequests)
+                .HasForeignKey(rr => rr.RideId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

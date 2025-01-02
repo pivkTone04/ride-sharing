@@ -20,26 +20,23 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                                                <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <!-- Dodane Navigacijske Povezave -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Vehicles" asp-action="Index">Vozila</a>
+                            <a class="nav-link text-dark" asp-controller="RideRequests" asp-action="Index">Moje Zahteve</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Rides" asp-action="Index">Prevozi</a>
+                            <a class="nav-link text-dark" asp-controller="Vehicles" asp-action="Index">Moja Vozila</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="RideSharing" asp-action="Index">Uporabniki</a>
+                            <a class="nav-link text-dark" asp-controller="Rides" asp-action="Index">Moji Prevozi</a>
                         </li>
-                        <!-- Konec Dodanih Navigacijskih Povezav -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-controller="RideRequests" asp-action="MyIncomingRequests">Prejete Zahteve</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
-                        <!-- Vključitev _LoginPartial brez dodatnega <ul> -->
                         <partial name="_LoginPartial" />
                     </ul>
                 </div>

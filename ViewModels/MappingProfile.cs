@@ -17,8 +17,9 @@ namespace RideSharing.ViewModels
             CreateMap<RideEditViewModel, Ride>();
 
 
+            CreateMap<VehicleCreateViewModel, Vehicle>();
             CreateMap<RideRequestCreateViewModel, RideRequest>();
-            CreateMap<RideRequest, RideRequestEditViewModel>();
+            CreateMap<RideRequest, RideRequestDetailsViewModel>();
             CreateMap<RideRequestEditViewModel, RideRequest>();
         }
     }

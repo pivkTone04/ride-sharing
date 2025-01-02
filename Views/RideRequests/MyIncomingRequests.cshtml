@@ -1,0 +1,49 @@
+@model IEnumerable<RideSharing.Models.RideRequest>
+
+@{
+    ViewData["Title"] = "Prejete Zahteve za Prevoz";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Potnik</th>
+            <th>Prevoz</th>
+            <th>Izvor</th>
+            <th>Destinacija</th>
+            <th>Datum Zahteve</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var request in Model)
+{
+        <tr>
+            <td>@request.Passenger.UserName</td>
+            <td>@request.Ride.Origin - @request.Ride.Destination</td>
+            <td>@request.Origin</td>
+            <td>@request.Destination</td>
+            <td>@request.RequestedAt.ToLocalTime().ToString("g")</td>
+            <td>@request.Status</td>
+            <td>
+                @if (request.Status == "Pending")
+                {
+                    <form asp-action="Accept" asp-route-id="@request.Id" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-success btn-sm">Sprejmi</button>
+                    </form>
+                    <form asp-action="Reject" asp-route-id="@request.Id" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Zavrni</button>
+                    </form>
+                }
+                else
+                {
+                    <span>@request.Status</span>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

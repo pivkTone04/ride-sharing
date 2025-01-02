@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RideSharing.Data;
 
@@ -11,9 +12,11 @@ using RideSharing.Data;
 namespace RideSharing.Migrations
 {
     [DbContext(typeof(RideSharingContext))]
-    partial class RideSharingContextModelSnapshot : ModelSnapshot
+    [Migration("20250102175306_AddRidesToVehicle")]
+    partial class AddRidesToVehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,6 +251,9 @@ namespace RideSharing.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Destination")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -258,9 +264,6 @@ namespace RideSharing.Migrations
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RideDateTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -300,7 +303,7 @@ namespace RideSharing.Migrations
                     b.Property<DateTime>("RequestedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RideId")
+                    b.Property<int?>("RideId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -443,19 +446,18 @@ namespace RideSharing.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("RideSharing.Models.Ride", "Ride")
+                    b.HasOne("RideSharing.Models.Ride", null)
                         .WithMany("RideRequests")
-                        .HasForeignKey("RideId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RideId");
 
-                    b.HasOne("RideSharing.Models.Vehicle", null)
+                    b.HasOne("RideSharing.Models.Vehicle", "Vehicle")
                         .WithMany("RideRequests")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Passenger");
 
-                    b.Navigation("Ride");
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("RideSharing.Models.Vehicle", b =>

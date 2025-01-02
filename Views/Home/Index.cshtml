@@ -1,11 +1,38 @@
-﻿@{
+﻿@model IEnumerable<RideSharing.Models.Ride>
+
+@{
     ViewData["Title"] = "Domov";
 }
 
-<h1>Dobrodošli v RideSharing!</h1>
-<p>
-    RideSharing vam omogoča enostavno iskanje in ponudbo prevozov med uporabniki.
-</p>
-<p>
-    <a asp-controller="Rides" asp-action="Index" class="btn btn-primary">Poglej Prevoze</a>
-</p>
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Voznik</th>
+            <th>Vozilo</th>
+            <th>Izvor</th>
+            <th>Destinacija</th>
+            <th>Datum Prevoza</th> 
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var ride in Model)
+    {
+        <tr>
+            <td>@ride.Driver?.UserName</td>
+            <td>@ride.Vehicle?.Make @ride.Vehicle?.Model</td>
+            <td>@ride.Origin</td>
+            <td>@ride.Destination</td>
+            <td>@ride.RideDateTime.ToLocalTime().ToString("g")</td>
+            <td>
+                @if (User.Identity.IsAuthenticated && ride.DriverId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                {
+                    <a asp-controller="RideRequests" asp-action="Create" asp-route-rideId="@ride.Id" class="btn btn-primary">Pošlji Zahtevo</a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
