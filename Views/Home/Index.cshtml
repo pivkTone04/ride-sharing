@@ -13,6 +13,7 @@
             <th>Vozilo</th>
             <th>Izvor</th>
             <th>Destinacija</th>
+            <th>Št. prostih sedežev</th>
             <th>Datum Prevoza</th> 
             <th></th>
         </tr>
@@ -25,10 +26,12 @@
             <td>@ride.Vehicle?.Make @ride.Vehicle?.Model</td>
             <td>@ride.Origin</td>
             <td>@ride.Destination</td>
+            <td>@ride.AvailableSeats</td>
             <td>@ride.RideDateTime.ToLocalTime().ToString("g")</td>
             <td>
                 @if (User.Identity.IsAuthenticated && ride.DriverId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
                 {
+                    <a asp-controller="Rides" asp-action="Details" asp-route-id="@ride.Id" class="btn btn-info">Podrobnosti</a>
                     <a asp-controller="RideRequests" asp-action="Create" asp-route-rideId="@ride.Id" class="btn btn-primary">Pošlji Zahtevo</a>
                 }
             </td>

@@ -51,8 +51,10 @@ namespace RideSharing.Controllers
                 .Where(v => v.DriverId == userId)
                 .ToListAsync();
 
+            var model = new RideCreateViewModel(); // Inicializacija praznega modela
             ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate");
-            return View();
+
+            return View(model);
         }
 
         [HttpPost]
@@ -65,6 +67,7 @@ namespace RideSharing.Controllers
                 var vehicles = await _context.Vehicles
                     .Where(v => v.DriverId == userId)
                     .ToListAsync();
+
                 ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", model.VehicleId);
                 return View(model);
             }
@@ -72,7 +75,6 @@ namespace RideSharing.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                Console.WriteLine("Uporabnik ni prijavljen.");
                 return Unauthorized();
             }
 
@@ -86,7 +88,6 @@ namespace RideSharing.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Vožnja uspešno shranjena.");
             }
             catch (Exception ex)
             {
@@ -120,8 +121,8 @@ namespace RideSharing.Controllers
             var vehicles = await _context.Vehicles
                 .Where(v => v.DriverId == ride.DriverId)
                 .ToListAsync();
-            ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", ride.VehicleId);
 
+            ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate", ride.VehicleId);
             return View(model);
         }
 
@@ -156,7 +157,6 @@ namespace RideSharing.Controllers
             {
                 _context.Update(ride);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Vožnja uspešno posodobljena.");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -204,6 +204,41 @@ namespace RideSharing.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Details(int? id)
+{
+    if (id == null)
+    {
+        return NotFound();
+    }
+
+    var ride = await _context.Rides
+        .Include(r => r.Vehicle)
+        .Include(r => r.Driver)
+        .FirstOrDefaultAsync(r => r.Id == id);
+
+    if (ride == null)
+    {
+        return NotFound();
+    }
+
+    var model = new RideDetailsViewModel
+    {
+        Id = ride.Id,
+        DriverEmail = ride.Driver.Email,
+        VehicleName = ride.Vehicle.Model,
+        Origin = ride.Origin,
+        Destination = ride.Destination,
+        RideDateTime = ride.RideDateTime,
+        AvailableSeats = ride.AvailableSeats,
+        PricePerSeat = ride.PricePerSeat,
+        PickupLocation = ride.PickupLocation,
+        RideDescription = ride.RideDescription
+    };
+
+    return View(model);
+}
+
 
         private bool RideExists(int id)
         {

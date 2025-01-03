@@ -1,4 +1,4 @@
-@model RideSharing.Models.Ride
+@model RideSharing.ViewModels.RideDetailsViewModel
 
 @{
     ViewData["Title"] = "Podrobnosti Prevoza";
@@ -6,32 +6,44 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Ride</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Voznik</dt>
-        <dd class="col-sm-10">@Model.Driver?.UserName</dd>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Voznik: @Model.DriverEmail</h4>
+        
+        <dl class="row">
+            <dt class="col-sm-3">Vozilo</dt>
+            <dd class="col-sm-9">@Model.VehicleName</dd>
 
-        <dt class="col-sm-2">Vozilo</dt>
-        <dd class="col-sm-10">@Model.Vehicle?.Make @Model.Vehicle?.Model</dd>
+            <dt class="col-sm-3">Izvor</dt>
+            <dd class="col-sm-9">@Model.Origin</dd>
 
-        <dt class="col-sm-2">Izvor</dt>
-        <dd class="col-sm-10">@Model.Origin</dd>
+            <dt class="col-sm-3">Destinacija</dt>
+            <dd class="col-sm-9">@Model.Destination</dd>
 
-        <dt class="col-sm-2">Destinacija</dt>
-        <dd class="col-sm-10">@Model.Destination</dd>
+            <dt class="col-sm-3">Datum Prevoza</dt>
+            <dd class="col-sm-9">@Model.RideDateTime.ToString("dd/MM/yyyy HH:mm")</dd>
 
-        <dt class="col-sm-2">Datum Prevoza</dt>
-        <dd class="col-sm-10">@Model.RideDateTime.ToLocalTime().ToString("g")</dd>
+            <!-- ✅ Novo polje: Prosti sedeži -->
+            <dt class="col-sm-3">Prosti sedeži</dt>
+            <dd class="col-sm-9">@Model.AvailableSeats</dd>
 
-        <dt class="col-sm-2">Ustvarjeno</dt>
-        <dd class="col-sm-10">@Model.CreatedAt.ToLocalTime().ToString("g")</dd>
+            <!-- ✅ Novo polje: Cena na sedež -->
+            <dt class="col-sm-3">Cena na sedež (€)</dt>
+            <dd class="col-sm-9">@Model.PricePerSeat €</dd>
 
-        <dt class="col-sm-2">Posodobljeno</dt>
-        <dd class="col-sm-10">@Model.UpdatedAt.ToLocalTime().ToString("g")</dd>
-    </dl>
+            <!-- ✅ Novo polje: Lokacija pobiranja -->
+            <dt class="col-sm-3">Kje te lahko poberem?</dt>
+            <dd class="col-sm-9">@Model.PickupLocation</dd>
+
+            <!-- ✅ Novo polje: Opis poti -->
+            <dt class="col-sm-3">Opis poti</dt>
+            <dd class="col-sm-9">@Model.RideDescription</dd>
+        </dl>
+        <form asp-controller="RideRequests" asp-action="Create" method="post">
+            <input type="hidden" name="RideId" value="@Model.Id" />
+            <button type="submit" class="btn btn-primary">Pošlji zahtevo</button>
+        </form>
+    </div>
 </div>
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Nazaj</a>
-</div>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Nazaj</a>

@@ -12,8 +12,8 @@ using RideSharing.Data;
 namespace RideSharing.Migrations
 {
     [DbContext(typeof(RideSharingContext))]
-    [Migration("20250102190056_RenameDateTimeToRideDateTimeAndAddTimestamps3")]
-    partial class RenameDateTimeToRideDateTimeAndAddTimestamps3
+    [Migration("20250103165437_AddNewRideFields2")]
+    partial class AddNewRideFields2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -248,6 +248,9 @@ namespace RideSharing.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -262,8 +265,21 @@ namespace RideSharing.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PickupLocation")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("PricePerSeat")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("RideDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("RideDescription")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -292,6 +308,11 @@ namespace RideSharing.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MessageToDriver")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -304,6 +325,9 @@ namespace RideSharing.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("RideId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeatsRequested")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")

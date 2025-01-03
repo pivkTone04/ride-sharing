@@ -47,26 +47,26 @@ namespace RideSharing.Controllers
             return View(incomingRequests);
         }
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+public async Task<IActionResult> Details(int? id)
+{
+    if (id == null)
+    {
+        return NotFound();
+    }
 
-            var rideRequest = await _context.RideRequests
-                .Include(rr => rr.Passenger)
-                .Include(rr => rr.Ride)
-                    .ThenInclude(r => r.Vehicle)
-                .FirstOrDefaultAsync(m => m.Id == id);
+    var rideRequest = await _context.RideRequests
+        .Include(rr => rr.Passenger)
+        .Include(rr => rr.Ride)
+        .ThenInclude(r => r.Vehicle)
+        .FirstOrDefaultAsync(rr => rr.Id == id);
 
-            if (rideRequest == null)
-            {
-                return NotFound();
-            }
+    if (rideRequest == null)
+    {
+        return NotFound();
+    }
 
-            return View(rideRequest);
-        }
+    return View(rideRequest);
+}
 
         public async Task<IActionResult> Create(int rideId)
         {
@@ -93,81 +93,95 @@ namespace RideSharing.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RideRequestCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.GetUserAsync(User);
-                var ride = await _context.Rides.FindAsync(model.RideId);
-                if (ride == null)
-                {
-                    return NotFound();
-                }
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(RideRequestCreateViewModel model)
+{
+    if (!ModelState.IsValid)
+    {
+        return View(model);
+    }
 
-                if (ride.DriverId == user.Id)
-                {
-                    return BadRequest("Ne morete poslati zahteve za svoj prevoz.");
-                }
+    var user = await _userManager.GetUserAsync(User);
+    var ride = await _context.Rides.FindAsync(model.RideId);
+    if (ride == null)
+    {
+        return NotFound();
+    }
 
-                var existingRequest = await _context.RideRequests
-                    .FirstOrDefaultAsync(rr => rr.RideId == model.RideId && rr.PassengerId == user.Id);
-                if (existingRequest != null)
-                {
-                    ModelState.AddModelError("", "Že imate obstoječo zahtevo za ta prevoz.");
-                    return View(model);
-                }
+    if (ride.DriverId == user.Id)
+    {
+        return BadRequest("Ne morete poslati zahteve za svoj prevoz.");
+    }
 
-                var rideRequest = new RideRequest
-                {
-                    Origin = model.Origin,
-                    Destination = model.Destination,
-                    RequestedAt = DateTime.UtcNow,
-                    PassengerId = user.Id,
-                    RideId = model.RideId,
-                    Status = "Pending"
-                };
+    var existingRequest = await _context.RideRequests
+        .FirstOrDefaultAsync(rr => rr.RideId == model.RideId && rr.PassengerId == user.Id);
+    if (existingRequest != null)
+    {
+        ModelState.AddModelError("", "Že imate obstoječo zahtevo za ta prevoz.");
+        return View(model);
+    }
 
-                _context.RideRequests.Add(rideRequest);
-                await _context.SaveChangesAsync();
+    if (model.SeatsRequested > ride.AvailableSeats)
+    {
+        ModelState.AddModelError("", "Ni dovolj prostih sedežev za vašo zahtevo.");
+        return View(model);
+    }
 
-                return RedirectToAction("Index", "Home");
-            }
+    var rideRequest = new RideRequest
+    {
+        Origin = model.Origin,
+        Destination = model.Destination,
+        SeatsRequested = model.SeatsRequested,
+        MessageToDriver = model.MessageToDriver,
+        RequestedAt = DateTime.UtcNow,
+        PassengerId = user.Id,
+        RideId = model.RideId,
+        Status = "Pending"
+    };
 
-            return View(model);
-        }
+    _context.RideRequests.Add(rideRequest);
+    await _context.SaveChangesAsync();
+
+    return RedirectToAction("Index", "Home");
+}
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Accept(int id)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var rideRequest = await _context.RideRequests
-                .Include(rr => rr.Ride)
-                .FirstOrDefaultAsync(rr => rr.Id == id);
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Accept(int id)
+{
+    var user = await _userManager.GetUserAsync(User);
+    var rideRequest = await _context.RideRequests
+        .Include(rr => rr.Ride)
+        .FirstOrDefaultAsync(rr => rr.Id == id);
 
-            if (rideRequest == null)
-            {
-                return NotFound();
-            }
+    if (rideRequest == null)
+    {
+        return NotFound();
+    }
 
-            if (rideRequest.Ride.DriverId != user.Id)
-            {
-                return Unauthorized();
-            }
+    if (rideRequest.Ride.DriverId != user.Id)
+    {
+        return Unauthorized();
+    }
 
-            if (rideRequest.Status != "Pending")
-            {
-                return BadRequest("Zahteva ni več v stanju 'Pending'.");
-            }
+    if (rideRequest.Status != "Pending")
+    {
+        return BadRequest("Zahteva ni več v stanju 'Pending'.");
+    }
 
-            rideRequest.Status = "Accepted";
+    if (rideRequest.SeatsRequested > rideRequest.Ride.AvailableSeats)
+    {
+        return BadRequest("Ni dovolj prostih sedežev za to zahtevo.");
+    }
 
-            _context.Update(rideRequest);
-            await _context.SaveChangesAsync();
+    rideRequest.Status = "Accepted";
+    rideRequest.Ride.AvailableSeats -= rideRequest.SeatsRequested;
 
+    _context.Update(rideRequest);
+    _context.Update(rideRequest.Ride);
+    await _context.SaveChangesAsync();
 
-            return RedirectToAction("MyIncomingRequests");
-        }
+    return RedirectToAction("MyIncomingRequests");
+}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -201,11 +215,50 @@ namespace RideSharing.Controllers
 
             return RedirectToAction("MyIncomingRequests");
         }
+        [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> CancelRequest(int id)
+{
+    var user = await _userManager.GetUserAsync(User);
+    var rideRequest = await _context.RideRequests
+        .Include(rr => rr.Ride)
+        .FirstOrDefaultAsync(rr => rr.Id == id);
+
+    if (rideRequest == null)
+    {
+        return NotFound();
+    }
+
+    if (rideRequest.PassengerId != user.Id)
+    {
+        return Unauthorized();
+    }
+
+    if (rideRequest.Status == "Deleted")
+    {
+        return BadRequest("Zahteva je že bila preklicana.");
+    }
+
+    if (rideRequest.Status == "Accepted")
+    {
+        rideRequest.Ride.AvailableSeats += rideRequest.SeatsRequested;
+        _context.Update(rideRequest.Ride);
+    }
+
+    rideRequest.Status = "Deleted";
+
+    _context.Update(rideRequest);
+    await _context.SaveChangesAsync();
+
+    return RedirectToAction("Index", "RideRequests");
+}
+
 
 
         private bool RideRequestExists(int id)
         {
             return _context.RideRequests.Any(e => e.Id == id);
         }
+        
     }
 }

@@ -12,8 +12,8 @@ using RideSharing.Data;
 namespace RideSharing.Migrations
 {
     [DbContext(typeof(RideSharingContext))]
-    [Migration("20241227133047_UpdateVehicleModel3")]
-    partial class UpdateVehicleModel3
+    [Migration("20250103161246_AddNewRideFields")]
+    partial class AddNewRideFields
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -248,7 +248,10 @@ namespace RideSharing.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Destination")
@@ -256,12 +259,30 @@ namespace RideSharing.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DriverId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PickupLocation")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("PricePerSeat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("RideDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RideDescription")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("VehicleId")
                         .HasColumnType("int");
@@ -283,6 +304,14 @@ namespace RideSharing.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PassengerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -297,11 +326,16 @@ namespace RideSharing.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("VehicleId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PassengerId");
 
                     b.HasIndex("RideId");
+
+                    b.HasIndex("VehicleId");
 
                     b.ToTable("RideRequests");
                 });
@@ -325,7 +359,6 @@ namespace RideSharing.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DriverId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LicensePlate")
@@ -408,14 +441,12 @@ namespace RideSharing.Migrations
                 {
                     b.HasOne("RideSharing.Models.ApplicationUser", "Driver")
                         .WithMany("Rides")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DriverId");
 
                     b.HasOne("RideSharing.Models.Vehicle", "Vehicle")
                         .WithMany("Rides")
                         .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Driver");
@@ -437,6 +468,10 @@ namespace RideSharing.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RideSharing.Models.Vehicle", null)
+                        .WithMany("RideRequests")
+                        .HasForeignKey("VehicleId");
+
                     b.Navigation("Passenger");
 
                     b.Navigation("Ride");
@@ -445,10 +480,8 @@ namespace RideSharing.Migrations
             modelBuilder.Entity("RideSharing.Models.Vehicle", b =>
                 {
                     b.HasOne("RideSharing.Models.ApplicationUser", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany("Vehicles")
+                        .HasForeignKey("DriverId");
 
                     b.Navigation("Driver");
                 });
@@ -458,6 +491,8 @@ namespace RideSharing.Migrations
                     b.Navigation("RideRequests");
 
                     b.Navigation("Rides");
+
+                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("RideSharing.Models.Ride", b =>
@@ -467,6 +502,8 @@ namespace RideSharing.Migrations
 
             modelBuilder.Entity("RideSharing.Models.Vehicle", b =>
                 {
+                    b.Navigation("RideRequests");
+
                     b.Navigation("Rides");
                 });
 #pragma warning restore 612, 618

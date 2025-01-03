@@ -1,43 +1,54 @@
 @model RideSharing.Models.RideRequest
 
+@inject Microsoft.AspNetCore.Identity.UserManager<RideSharing.Models.ApplicationUser> UserManager
+
 @{
-    ViewData["Title"] = "Podrobnosti Zahteve za Prevoz";
+    ViewData["Title"] = "Podrobnosti Zahtevka za Prevoz";
+    var currentUser = await UserManager.GetUserAsync(User);
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>RideRequest</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Potnik</dt>
-        <dd class="col-sm-10">@Model.Passenger.UserName</dd>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Potnik: @Model.Passenger.Email</h4>
 
-        <dt class="col-sm-2">Prevoz</dt>
-        <dd class="col-sm-10">@Model.Ride.Origin - @Model.Ride.Destination</dd>
+        <dl class="row">
+            <dt class="col-sm-3">Prevoz</dt>
+            <dd class="col-sm-9">@Model.Ride.Origin - @Model.Ride.Destination</dd>
 
-        <dt class="col-sm-2">Datum Prevoza</dt>
-        <dd class="col-sm-10">@Model.Ride.RideDateTime.ToLocalTime().ToString("g")</dd>
+            <dt class="col-sm-3">Izvor</dt>
+            <dd class="col-sm-9">@Model.Origin</dd>
 
-        <dt class="col-sm-2">Ustvarjeno</dt>
-        <dd class="col-sm-10">@Model.Ride.CreatedAt.ToLocalTime().ToString("g")</dd>
+            <dt class="col-sm-3">Destinacija</dt>
+            <dd class="col-sm-9">@Model.Destination</dd>
 
-        <dt class="col-sm-2">Posodobljeno</dt>
-        <dd class="col-sm-10">@Model.Ride.UpdatedAt.ToLocalTime().ToString("g")</dd>
+            <dt class="col-sm-3">Datum Zahteve</dt>
+            <dd class="col-sm-9">@Model.RequestedAt.ToString("dd/MM/yyyy HH:mm")</dd>
 
-        <dt class="col-sm-2">Izvor</dt>
-        <dd class="col-sm-10">@Model.Origin</dd>
+            <dt class="col-sm-3">Število zahtevanih sedežev</dt>
+            <dd class="col-sm-9">@Model.SeatsRequested</dd>
 
-        <dt class="col-sm-2">Destinacija</dt>
-        <dd class="col-sm-10">@Model.Destination</dd>
+            <dt class="col-sm-3">Sporočilo vozniku</dt>
+            <dd class="col-sm-9">@Model.MessageToDriver</dd>
 
-        <dt class="col-sm-2">Datum Zahteve</dt>
-        <dd class="col-sm-10">@Model.RequestedAt.ToLocalTime().ToString("g")</dd>
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9">@Model.Status</dd>
 
-        <dt class="col-sm-2">Status</dt>
-        <dd class="col-sm-10">@Model.Status</dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Nazaj</a>
+            <dt class="col-sm-3">Vozilo</dt>
+            <dd class="col-sm-9">@Model.Ride.Vehicle.Make @Model.Ride.Vehicle.Model</dd>
+
+        
+            @if (Model.Status == "Accepted")
+            {
+                <dt class="col-sm-3">Tablica</dt>
+                <dd class="col-sm-9">@Model.Ride.Vehicle.LicensePlate</dd>
+
+                <dt class="col-sm-3">Barva vozila</dt>
+                <dd class="col-sm-9">@Model.Ride.Vehicle.Color</dd>
+            }
+        </dl>
+
+        <a asp-action="Index" class="btn btn-secondary">Nazaj</a>
+    </div>
 </div>

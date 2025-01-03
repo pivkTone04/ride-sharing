@@ -12,8 +12,8 @@ using RideSharing.Data;
 namespace RideSharing.Migrations
 {
     [DbContext(typeof(RideSharingContext))]
-    [Migration("20250101171510_AddCreatedUpdatedAtAndUserVehicles")]
-    partial class AddCreatedUpdatedAtAndUserVehicles
+    [Migration("20250103154334_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -251,9 +251,6 @@ namespace RideSharing.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Destination")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -264,6 +261,9 @@ namespace RideSharing.Migrations
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RideDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -288,6 +288,14 @@ namespace RideSharing.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PassengerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -302,11 +310,16 @@ namespace RideSharing.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("VehicleId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PassengerId");
 
                     b.HasIndex("RideId");
+
+                    b.HasIndex("VehicleId");
 
                     b.ToTable("RideRequests");
                 });
@@ -430,7 +443,7 @@ namespace RideSharing.Migrations
                     b.HasOne("RideSharing.Models.ApplicationUser", "Passenger")
                         .WithMany("RideRequests")
                         .HasForeignKey("PassengerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("RideSharing.Models.Ride", "Ride")
@@ -438,6 +451,10 @@ namespace RideSharing.Migrations
                         .HasForeignKey("RideId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("RideSharing.Models.Vehicle", null)
+                        .WithMany("RideRequests")
+                        .HasForeignKey("VehicleId");
 
                     b.Navigation("Passenger");
 
@@ -469,6 +486,8 @@ namespace RideSharing.Migrations
 
             modelBuilder.Entity("RideSharing.Models.Vehicle", b =>
                 {
+                    b.Navigation("RideRequests");
+
                     b.Navigation("Rides");
                 });
 #pragma warning restore 612, 618

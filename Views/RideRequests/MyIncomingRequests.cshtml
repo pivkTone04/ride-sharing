@@ -13,37 +13,40 @@
             <th>Prevoz</th>
             <th>Izvor</th>
             <th>Destinacija</th>
+            <th>Št. zahtevanih sedežev</th>
             <th>Datum Zahteve</th>
             <th>Status</th>
-            <th></th>
+            <th>Akcije</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var request in Model)
-{
-        <tr>
-            <td>@request.Passenger.UserName</td>
-            <td>@request.Ride.Origin - @request.Ride.Destination</td>
-            <td>@request.Origin</td>
-            <td>@request.Destination</td>
-            <td>@request.RequestedAt.ToLocalTime().ToString("g")</td>
-            <td>@request.Status</td>
-            <td>
-                @if (request.Status == "Pending")
-                {
-                    <form asp-action="Accept" asp-route-id="@request.Id" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-success btn-sm">Sprejmi</button>
-                    </form>
-                    <form asp-action="Reject" asp-route-id="@request.Id" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-danger btn-sm">Zavrni</button>
-                    </form>
-                }
-                else
-                {
-                    <span>@request.Status</span>
-                }
-            </td>
-        </tr>
-}
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.Passenger.Email</td>
+                <td>@request.Ride.Origin - @request.Ride.Destination</td>
+                <td>@request.Origin</td>
+                <td>@request.Destination</td>
+                <td>@request.SeatsRequested</td>
+                <td>@request.RequestedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@request.Status</td>
+                <td>
+                    <a asp-controller="RideRequests" asp-action="Details" asp-route-id="@request.Id" class="btn btn-info">Podrobnosti</a>
+
+                    @if (request.Status == "Pending")
+                    {
+                        <form asp-controller="RideRequests" asp-action="Accept" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@request.Id" />
+                            <button type="submit" class="btn btn-success">Sprejmi</button>
+                        </form>
+
+                        <form asp-controller="RideRequests" asp-action="Reject" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@request.Id" />
+                            <button type="submit" class="btn btn-danger">Zavrni</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
