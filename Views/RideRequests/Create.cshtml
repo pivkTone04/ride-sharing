@@ -7,6 +7,13 @@
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+    }
+
     <input type="hidden" asp-for="RideId" />
 
     <div class="form-group">

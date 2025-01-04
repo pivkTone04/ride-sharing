@@ -19,20 +19,25 @@ public class AccountController : Controller
         return View();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+[HttpPost]
+public async Task<IActionResult> Login(LoginViewModel model)
+{
+    if (ModelState.IsValid)
     {
-        if (ModelState.IsValid)
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user != null)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("", "Invalid login attempt.");
         }
-        return View(model);
+        ModelState.AddModelError("", "Nepravilna prijava. Preverite e-pošto in geslo.");
     }
+    return View(model);
+}
+
 
     public IActionResult Register()
     {
@@ -54,8 +59,8 @@ public class AccountController : Controller
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                TempData["RegistrationSuccess"] = "Uspešna registracija! Prijavite se.";
+            return RedirectToAction("Login", "Account");
             }
             foreach (var error in result.Errors)
             {

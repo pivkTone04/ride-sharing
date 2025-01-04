@@ -20,20 +20,20 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Origin" class="control-label"></label>
+        <label asp-for="Origin" class="control-label">Začetni kraj vožnje</label>
         <input asp-for="Origin" class="form-control" />
         <span asp-validation-for="Origin" class="text-danger"></span>
     </div>
     
     <div class="form-group">
-        <label asp-for="Destination" class="control-label"></label>
+        <label asp-for="Destination" class="control-label">Končni kraj vožnje</label>
         <input asp-for="Destination" class="form-control" />
         <span asp-validation-for="Destination" class="text-danger"></span>
     </div>
     
     <div class="form-group">
         <label asp-for="RideDateTime" class="control-label"></label>
-        <input asp-for="RideDateTime" class="form-control" type="datetime-local" />
+        <input asp-for="RideDateTime" class="form-control" type="datetime-local"step="60"/>
         <span asp-validation-for="RideDateTime" class="text-danger"></span>
     </div>
     
@@ -58,7 +58,7 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="PickupLocation" class="control-label"></label>
+        <label asp-for="PickupLocation" class="control-label">Možne vstopne/izstopne točke za prevoz</label>
         <input asp-for="PickupLocation" class="form-control" />
         <span asp-validation-for="PickupLocation" class="text-danger"></span>
     </div>
@@ -76,4 +76,17 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    document.getElementById("VehicleId").addEventListener("change", function () {
+        var vehicleId = this.value;
+        fetch('/Vehicles/GetMaxSeats?vehicleId=' + vehicleId)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("AvailableSeats").max = data.maxSeats;
+            });
+    });
+</script>
+
 }
+

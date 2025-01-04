@@ -14,6 +14,7 @@ namespace RideSharing.ViewModels
         public string Destination { get; set; }
 
         [Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         [Display(Name = "Datum Prevoza")]
         public DateTime RideDateTime { get; set; }
 

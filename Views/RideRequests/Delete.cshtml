@@ -6,38 +6,44 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<h3>Ste prepričani, da želite izbrisati to zahtevo?</h3>
+
+@if (ViewData.ModelState.ErrorCount > 0)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
+
 <div>
     <h4>RideRequest</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Izvor
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Model.Origin
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Destinacija
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Model.Destination
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Datum Zahteve
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Model.RequestedAt.ToLocalTime().ToString("g")
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Status
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Model.Status
         </dd>
     </dl>
     
     <form asp-action="DeleteConfirmed" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Izbriši" class="btn btn-danger" /> |
         <a asp-action="Index" class="btn btn-secondary">Nazaj</a>

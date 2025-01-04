@@ -1,6 +1,7 @@
 @model RideSharing.Models.RideRequest
 
-@inject Microsoft.AspNetCore.Identity.UserManager<RideSharing.Models.ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<RideSharing.Models.ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Podrobnosti Zahtevka za Prevoz";
@@ -24,7 +25,7 @@
             <dd class="col-sm-9">@Model.Destination</dd>
 
             <dt class="col-sm-3">Datum Zahteve</dt>
-            <dd class="col-sm-9">@Model.RequestedAt.ToString("dd/MM/yyyy HH:mm")</dd>
+            <dd class="col-sm-9">@Model.RequestedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
 
             <dt class="col-sm-3">Število zahtevanih sedežev</dt>
             <dd class="col-sm-9">@Model.SeatsRequested</dd>
@@ -38,7 +39,6 @@
             <dt class="col-sm-3">Vozilo</dt>
             <dd class="col-sm-9">@Model.Ride.Vehicle.Make @Model.Ride.Vehicle.Model</dd>
 
-        
             @if (Model.Status == "Accepted")
             {
                 <dt class="col-sm-3">Tablica</dt>
@@ -48,7 +48,40 @@
                 <dd class="col-sm-9">@Model.Ride.Vehicle.Color</dd>
             }
         </dl>
-
+        
         <a asp-action="Index" class="btn btn-secondary">Nazaj</a>
+
+        @if (currentUser != null)
+        {
+        
+            if (currentUser.Id == Model.PassengerId && Model.Status != "Deleted")
+            {
+                <form asp-action="CancelRequest" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Prekliči zahtevo</button>
+                </form>
+            }
+
+        
+            if (currentUser.Id == Model.Ride.DriverId && Model.Status == "Pending")
+            {
+                <form asp-action="Accept" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success">Sprejmi</button>
+                </form>
+
+                <form asp-action="Reject" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Zavrni</button>
+                </form>
+            }
+        }
+
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

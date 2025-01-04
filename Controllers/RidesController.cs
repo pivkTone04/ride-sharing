@@ -34,7 +34,7 @@ namespace RideSharing.Controllers
             {
                 return Challenge();
             }
-
+            var currentDateTime = DateTime.Now;
             var userId = user.Id;
             var rides = await _context.Rides
                 .Where(r => r.DriverId == userId)
@@ -51,7 +51,7 @@ namespace RideSharing.Controllers
                 .Where(v => v.DriverId == userId)
                 .ToListAsync();
 
-            var model = new RideCreateViewModel(); // Inicializacija praznega modela
+            var model = new RideCreateViewModel();
             ViewBag.Vehicles = new SelectList(vehicles, "Id", "LicensePlate");
 
             return View(model);
@@ -80,8 +80,8 @@ namespace RideSharing.Controllers
 
             var ride = _mapper.Map<Ride>(model);
             ride.DriverId = user.Id;
-            ride.CreatedAt = DateTime.UtcNow;
-            ride.UpdatedAt = DateTime.UtcNow;
+            ride.CreatedAt = DateTime.Now;
+            ride.UpdatedAt = DateTime.Now;
 
             _context.Add(ride);
 
@@ -151,7 +151,7 @@ namespace RideSharing.Controllers
             }
 
             _mapper.Map(model, ride);
-            ride.UpdatedAt = DateTime.UtcNow;
+            ride.UpdatedAt = DateTime.Now;
 
             try
             {

@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using RideSharing.Models;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using RideSharing.ViewModels; // Dodajte ta namespace
+using RideSharing.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Dodajte AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// Dodajte druge storitve
 builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("RideSharingContext") 
@@ -19,7 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("RideSharingCon
 builder.Services.AddDbContext<RideSharingContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<RideSharingContext>();
 

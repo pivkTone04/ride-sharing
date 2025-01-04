@@ -114,7 +114,6 @@ namespace RideSharing.Areas.Identity.Pages.Account
     {
         var user = CreateUser();
 
-        // Nastavite FirstName in LastName
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
 
@@ -140,12 +139,12 @@ namespace RideSharing.Areas.Identity.Pages.Account
 
             if (_userManager.Options.SignIn.RequireConfirmedAccount)
             {
-                return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                return RedirectToPage("./Login");
             }
             else
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return LocalRedirect(returnUrl);
+                return RedirectToPage("./Home");
             }
         }
         foreach (var error in result.Errors)

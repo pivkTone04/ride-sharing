@@ -88,8 +88,8 @@ public async Task<IActionResult> Create(IFormCollection form)
             Color = model.Color,
             Capacity = model.Capacity,
             DriverId = user.Id,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
 
         Console.WriteLine("Podatki vozila za shranjevanje:");
@@ -157,7 +157,7 @@ public async Task<IActionResult> Create(IFormCollection form)
             }
 
             _mapper.Map(model, vehicle);
-            vehicle.UpdatedAt = DateTime.UtcNow;
+            vehicle.UpdatedAt = DateTime.Now;
 
             try
             {
@@ -215,5 +215,18 @@ public async Task<IActionResult> Create(IFormCollection form)
         {
             return _context.Vehicles.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+    public JsonResult GetMaxSeats(int vehicleId)
+    {
+    var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == vehicleId);
+    if (vehicle != null)
+    {
+        return Json(new { maxSeats = vehicle.Capacity });
+    }
+    return Json(new { maxSeats = 1 });
+}
+
+
     }
 }

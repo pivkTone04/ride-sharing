@@ -10,5 +10,8 @@ namespace RideSharing.ViewModels
         public string Origin { get; set; }
         public string Destination { get; set; }
         public DateTime RideDateTime { get; set; }
+        public bool CanRequest { get; set; }
+        public bool IsDriver { get; set; }
+        public int AvailableSeats { get; set; }
     }
 }
