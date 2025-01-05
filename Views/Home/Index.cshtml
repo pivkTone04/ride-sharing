@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<RideSharing.ViewModels.RideViewModel>
 
 @{
-    ViewData["Title"] = "Domov";
+    ViewData["Title"] = "Rides";
+    Layout = "/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -14,12 +15,13 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Voznik</th>
-            <th>Vozilo</th>
-            <th>Izvor</th>
-            <th>Destinacija</th>
-            <th>Št. prostih sedežev</th>
-            <th>Datum Prevoza</th> 
+            <th>Driver</th>
+            <th>Vehicle</th>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th>Empty seats</th>
+            <th>Price per seat</th>
+            <th>Ride date</th> 
             <th></th>
         </tr>
     </thead>
@@ -32,23 +34,24 @@
             <td>@rideVM.Origin</td>
             <td>@rideVM.Destination</td>
             <td>@rideVM.AvailableSeats</td>
+            <td>@rideVM.PricePerSeat.ToString("F2") €</td>
             <td>@rideVM.RideDateTime.ToLocalTime().ToString("g")</td>
             <td>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a asp-controller="Rides" asp-action="Details" asp-route-id="@rideVM.Id" class="btn btn-info">Podrobnosti</a>
+                    <a asp-controller="Rides" asp-action="Details" asp-route-id="@rideVM.Id" class="btn btn-info">Details</a>
                     
                     @if (rideVM.IsDriver)
                     {
-                        <span class="btn btn-secondary disabled">Lastnik vožnje</span>
+                        <span class="btn btn-secondary disabled">Ride owner</span>
                     }
                     else if (rideVM.CanRequest)
                     {
-                        <a asp-controller="RideRequests" asp-action="Create" asp-route-rideId="@rideVM.Id" class="btn btn-primary">Pošlji Zahtevo</a>
+                        <a asp-controller="RideRequests" asp-action="Create" asp-route-rideId="@rideVM.Id" class="btn btn-primary">Send request</a>
                     }
                     else
                     {
-                        <button class="btn btn-warning" disabled>Že imate zahtevo</button>
+                        <button class="btn btn-success" disabled>Request sent!</button>
                     }
                 }
             </td>

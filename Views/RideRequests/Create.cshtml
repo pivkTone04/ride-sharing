@@ -1,7 +1,7 @@
 @model RideSharing.ViewModels.RideRequestCreateViewModel
 
 @{
-    ViewData["Title"] = "Pošlji Zahtevo za Prevoz";
+    ViewData["Title"] = "Send ride request";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -17,30 +17,31 @@
     <input type="hidden" asp-for="RideId" />
 
     <div class="form-group">
-        <label asp-for="Origin" class="control-label"></label>
+        <label asp-for="Origin" class="control-label">Origin:</label>
         <input asp-for="Origin" class="form-control" />
         <span asp-validation-for="Origin" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Destination" class="control-label"></label>
+        <label asp-for="Destination" class="control-label">Destination:</label>
         <input asp-for="Destination" class="form-control" />
         <span asp-validation-for="Destination" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="SeatsRequested" class="control-label"></label>
+        <label asp-for="SeatsRequested" class="control-label">Requested seats:</label>
         <input asp-for="SeatsRequested" type="number" class="form-control" min="1" max="5" />
         <span asp-validation-for="SeatsRequested" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="MessageToDriver" class="control-label"></label>
+        <label asp-for="MessageToDriver" class="control-label">Message to the driver:</label>
         <textarea asp-for="MessageToDriver" class="form-control" rows="3"></textarea>
         <span asp-validation-for="MessageToDriver" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Pošlji Zahtevo</button>
+    <button type="submit" class="btn btn-primary">Send request</button>
+    <a class="btn btn-secondary" onclick="history.back()">Back</a>
 </form>
 
 @section Scripts {

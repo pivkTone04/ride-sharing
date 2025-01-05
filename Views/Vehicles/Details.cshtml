@@ -1,17 +1,16 @@
 @model RideSharing.Models.Vehicle
 
 @{
-    ViewData["Title"] = "Podrobnosti Vozila";
+    ViewData["Title"] = "Vehicle details";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <div>
-    <h4>Vozilo</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            Proizvajalec
+            Make
         </dt>
         <dd class="col-sm-10">
             @Model.Make
@@ -23,37 +22,37 @@
             @Model.Model
         </dd>
         <dt class="col-sm-2">
-            Letnik
+            Model year
         </dt>
         <dd class="col-sm-10">
             @Model.Year
         </dd>
         <dt class="col-sm-2">
-            Registrska Številka
+            License plate
         </dt>
         <dd class="col-sm-10">
             @Model.LicensePlate
         </dd>
         <dt class="col-sm-2">
-            Barva
+            Color
         </dt>
         <dd class="col-sm-10">
             @Model.Color
         </dd>
         <dt class="col-sm-2">
-            Kapaciteta
+            Capacity
         </dt>
         <dd class="col-sm-10">
             @Model.Capacity
         </dd>
         <dt class="col-sm-2">
-            Ustvarjeno
+            Created at
         </dt>
         <dd class="col-sm-10">
             @Model.CreatedAt.ToLocalTime().ToString("g")
         </dd>
         <dt class="col-sm-2">
-            Posodobljeno
+            Updated at
         </dt>
         <dd class="col-sm-10">
             @Model.UpdatedAt.ToLocalTime().ToString("g")
@@ -61,6 +60,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Uredi</a> |
-    <a asp-action="Index" class="btn btn-secondary">Nazaj na seznam</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
 </div>

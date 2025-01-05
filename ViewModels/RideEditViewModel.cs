@@ -15,30 +15,30 @@ namespace RideSharing.ViewModels
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Datum Prevoza")]
+        [Display(Name = "Ride date")]
         public DateTime RideDateTime { get; set; }
 
         [Required]
-        [Display(Name = "Vozilo")]
+        [Display(Name = "Vehicle")]
         public int VehicleId { get; set; }
 
         [Required]
-        [Range(1, 10, ErrorMessage = "Prosti sedeži morajo biti med 1 in 10.")]
-        [Display(Name = "Prosti sedeži")]
+        [Range(1, 10, ErrorMessage = "Empty seats morajo biti med 1 in 10.")]
+        [Display(Name = "Empty seats")]
         public int AvailableSeats { get; set; }
 
         [Required]
-        [Range(0, 100, ErrorMessage = "Cena na sedež mora biti med 0 in 100 EUR.")]
-        [Display(Name = "Cena na sedež (€)")]
+        [Range(0, 100, ErrorMessage = "Price per seat mora biti med 0 in 100 EUR.")]
+        [Display(Name = "Price per seat (€)")]
         public decimal PricePerSeat { get; set; }
 
         [Required]
         [StringLength(255, ErrorMessage = "Lokacija pobiranja ne sme biti daljša od 255 znakov.")]
-        [Display(Name = "Kje te lahko poberem?")]
+        [Display(Name = "Possible stops")]
         public string PickupLocation { get; set; }
 
-        [StringLength(500, ErrorMessage = "Opis poti ne sme biti daljši od 500 znakov.")]
-        [Display(Name = "Opis poti")]
+        [StringLength(500, ErrorMessage = "Route description ne sme biti daljši od 500 znakov.")]
+        [Display(Name = "Route description")]
         public string RideDescription { get; set; }
     }
 }

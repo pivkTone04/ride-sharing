@@ -6,6 +6,7 @@ namespace RideSharing.ViewModels
     {
         public int Id { get; set; }
         public string DriverEmail { get; set; }
+        public string DriverId { get; set; }
         public string VehicleName { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
@@ -14,5 +15,6 @@ namespace RideSharing.ViewModels
         public decimal PricePerSeat { get; set; }
         public string PickupLocation { get; set; }
         public string RideDescription { get; set; }
+        public string ExistingRequestStatus { get; set; }
     }
 }

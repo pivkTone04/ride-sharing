@@ -47,77 +47,77 @@ namespace RideSharing.Controllers
             return View();
         }
 
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(IFormCollection form)
-{
-    try
-    {
-        var model = new VehicleCreateViewModel
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(IFormCollection form)
         {
-            Make = form["Make"],
-            Model = form["Model"],
-            Year = int.TryParse(form["Year"], out var year) ? year : 0,
-            LicensePlate = form["LicensePlate"],
-            Color = form["Color"],
-            Capacity = int.TryParse(form["Capacity"], out var capacity) ? capacity : 0
-        };
+            try
+            {
+                var model = new VehicleCreateViewModel
+                {
+                    Make = form["Make"],
+                    Model = form["Model"],
+                    Year = int.TryParse(form["Year"], out var year) ? year : 0,
+                    LicensePlate = form["LicensePlate"],
+                    Color = form["Color"],
+                    Capacity = int.TryParse(form["Capacity"], out var capacity) ? capacity : 0
+                };
 
-        if (!TryValidateModel(model))
-        {
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                          .Select(e => e.ErrorMessage)
-                                          .ToList();
-            Console.WriteLine("Napake v ModelState: " + string.Join(", ", errors));
-            return View(model);
+                if (!TryValidateModel(model))
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+                    Console.WriteLine("Errors in ModelState: " + string.Join(", ", errors));
+                    return View(model);
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    Console.WriteLine("User is not logged in.");
+                    return Unauthorized();
+                }
+
+                var vehicle = new Vehicle
+                {
+                    Make = model.Make,
+                    Model = model.Model,
+                    Year = model.Year,
+                    LicensePlate = model.LicensePlate,
+                    Color = model.Color,
+                    Capacity = model.Capacity,
+                    DriverId = user.Id,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+
+                Console.WriteLine("Vehicle data for saving:");
+                Console.WriteLine($"DriverId: {vehicle.DriverId}, Make: {vehicle.Make}, Model: {vehicle.Model}, Year: {vehicle.Year}");
+
+                _context.Vehicles.Add(vehicle);
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("Vehicle successfully saved.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving vehicle: {ex.Message}");
+                    ModelState.AddModelError("", "An error occurred while saving the vehicle.");
+                    return View(model);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing request: {ex.Message}");
+                ModelState.AddModelError("", "An unexpected error occurred.");
+                return View(new VehicleCreateViewModel());
+            }
         }
-
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            Console.WriteLine("Uporabnik ni prijavljen.");
-            return Unauthorized();
-        }
-
-        var vehicle = new Vehicle
-        {
-            Make = model.Make,
-            Model = model.Model,
-            Year = model.Year,
-            LicensePlate = model.LicensePlate,
-            Color = model.Color,
-            Capacity = model.Capacity,
-            DriverId = user.Id,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
-        };
-
-        Console.WriteLine("Podatki vozila za shranjevanje:");
-        Console.WriteLine($"DriverId: {vehicle.DriverId}, Make: {vehicle.Make}, Model: {vehicle.Model}, Year: {vehicle.Year}");
-
-        _context.Vehicles.Add(vehicle);
-
-        try
-        {
-            await _context.SaveChangesAsync();
-            Console.WriteLine("Vozilo uspešno shranjeno.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Napaka pri shranjevanju vozila: {ex.Message}");
-            ModelState.AddModelError("", "Prišlo je do napake pri shranjevanju vozila.");
-            return View(model);
-        }
-
-        return RedirectToAction(nameof(Index));
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Napaka pri obdelavi zahteve: {ex.Message}");
-        ModelState.AddModelError("", "Prišlo je do nepričakovane napake.");
-        return View(new VehicleCreateViewModel());
-    }
-}
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -163,7 +163,7 @@ public async Task<IActionResult> Create(IFormCollection form)
             {
                 _context.Update(vehicle);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Vozilo uspešno posodobljeno.");
+                Console.WriteLine("Vehicle successfully updated.");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -217,16 +217,32 @@ public async Task<IActionResult> Create(IFormCollection form)
         }
 
         [HttpGet]
-    public JsonResult GetMaxSeats(int vehicleId)
-    {
-    var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == vehicleId);
-    if (vehicle != null)
-    {
-        return Json(new { maxSeats = vehicle.Capacity });
-    }
-    return Json(new { maxSeats = 1 });
-}
+        public JsonResult GetMaxSeats(int vehicleId)
+        {
+            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Id == vehicleId);
+            if (vehicle != null)
+            {
+                return Json(new { maxSeats = vehicle.Capacity });
+            }
+            return Json(new { maxSeats = 1 });
+        }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+             var vehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            return View(vehicle);
+        }
 
     }
 }

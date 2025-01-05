@@ -4,22 +4,22 @@ namespace RideSharing.ViewModels
 {
     public class VehicleCreateViewModel
     {
-        [Required(ErrorMessage = "Prosim, vnesite proizvajalca.")]
+        [Required(ErrorMessage = "Please enter the manufacturer.")]
         public string Make { get; set; }
 
-        [Required(ErrorMessage = "Prosim, vnesite model.")]
+        [Required(ErrorMessage = "Please enter the model.")]
         public string Model { get; set; }
 
-        [Range(1900, 2100, ErrorMessage = "Prosimo, vnesite veljavno leto.")]
+        [Range(1900, 2100, ErrorMessage = "Please enter a valid year.")]
         public int Year { get; set; }
 
-        [Required(ErrorMessage = "Prosim, vnesite registrsko številko.")]
+        [Required(ErrorMessage = "Please enter the license plate number.")]
         public string LicensePlate { get; set; }
 
-        [Required(ErrorMessage = "Prosim, vnesite barvo.")]
+        [Required(ErrorMessage = "Please enter the color.")]
         public string Color { get; set; }
 
-        [Range(1, 10, ErrorMessage = "Kapaciteta mora biti med 1 in 10.")]
+        [Range(1, 10, ErrorMessage = "Capacity must be between 1 and 10.")]
         public int Capacity { get; set; }
     }
 }

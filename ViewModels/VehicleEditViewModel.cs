@@ -13,7 +13,7 @@ namespace RideSharing.ViewModels
         [Required]
         public string Model { get; set; }
 
-        [Range(1900, 2100, ErrorMessage = "Prosimo, vnesite veljavno leto.")]
+        [Range(1900, 2100, ErrorMessage = "Please enter a valid year.")]
         public int Year { get; set; }
 
         [Required]
@@ -21,7 +21,7 @@ namespace RideSharing.ViewModels
 
         public string Color { get; set; }
 
-        [Range(1, 10, ErrorMessage = "Kapaciteta mora biti med 1 in 10.")]
+        [Range(1, 10, ErrorMessage = "Capacity must be between 1 and 10.")]
         public int Capacity { get; set; }
     }
 }

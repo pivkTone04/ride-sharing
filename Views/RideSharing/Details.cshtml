@@ -1,7 +1,7 @@
 @model RideSharing.Models.ApplicationUser
 
 @{
-    ViewData["Title"] = "Podrobnosti Uporabnika";
+    ViewData["Title"] = "Details Uporabnika";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -37,6 +37,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Uredi</a> |
-    <a asp-action="Index" class="btn btn-secondary">Nazaj</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> |
+    <a class="btn btn-secondary" onclick="history.back()">Back</a>
 </div>

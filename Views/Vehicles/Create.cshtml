@@ -1,7 +1,7 @@
 @model RideSharing.ViewModels.VehicleCreateViewModel
 
 @{
-    ViewData["Title"] = "Ustvari Novo Vozilo";
+    ViewData["Title"] = "Add a new vehicle";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -20,7 +20,7 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Make" class="control-label">Znamka:</label>
+        <label asp-for="Make" class="control-label">Make:</label>
         <input asp-for="Make" class="form-control" />
         <span asp-validation-for="Make" class="text-danger"></span>
     </div>
@@ -30,27 +30,28 @@
         <span asp-validation-for="Model" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Year" class="control-label">Leto:</label>
+        <label asp-for="Year" class="control-label">Model year:</label>
         <input asp-for="Year" class="form-control" />
         <span asp-validation-for="Year" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="LicensePlate" class="control-label">Registrska tablica:</label>
+        <label asp-for="LicensePlate" class="control-label">License plate:</label>
         <input asp-for="LicensePlate" class="form-control" />
         <span asp-validation-for="LicensePlate" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Color" class="control-label">Barva:</label>
+        <label asp-for="Color" class="control-label">Color:</label>
         <input asp-for="Color" class="form-control" />
         <span asp-validation-for="Color" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Capacity" class="control-label">Število sedežev brez voznika:</label>
+        <label asp-for="Capacity" class="control-label">Maximum capacity of passengers:</label>
         <input asp-for="Capacity" class="form-control" />
         <span asp-validation-for="Capacity" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Shrani" class="btn btn-primary" />
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a class="btn btn-secondary" onclick="history.back()">Back</a>
     </div>
 </form>
 

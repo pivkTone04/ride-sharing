@@ -13,5 +13,6 @@ namespace RideSharing.ViewModels
         public bool CanRequest { get; set; }
         public bool IsDriver { get; set; }
         public int AvailableSeats { get; set; }
+        public decimal PricePerSeat { get; set; }
     }
 }

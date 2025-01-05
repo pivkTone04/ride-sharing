@@ -6,6 +6,8 @@ C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\RideSharing
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\RideSharing.runtimeconfig.json
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\RideSharing.dll
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\RideSharing.pdb
+C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\Humanizer.dll
@@ -263,5 +265,3 @@ C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\refint\Ride
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\RideSharing.pdb
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\RideSharing.genruntimeconfig.cache
 C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\obj\Debug\net8.0\ref\RideSharing.dll
-C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\AutoMapper.dll
-C:\Users\lanco\OneDrive\Namizje\Skol\IS\RideSharing\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

@@ -1,25 +1,26 @@
 @model IEnumerable<RideSharing.Models.Vehicle>
 
 @{
-    ViewData["Title"] = "Moja Vozila";
+    ViewData["Title"] = "My vehicles";
+    Layout = "/Views/Shared/_Layout.cshtml";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj Novo Vozilo</a>
+    <a asp-action="Create" class="btn btn-primary">Add a new vehicle</a>
 </p>
 
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Proizvajalec</th>
+            <th>Make</th>
             <th>Model</th>
-            <th>Letnik</th>
-            <th>Registrska Številka</th>
-            <th>Barva</th>
-            <th>Kapaciteta</th>
-            <th>Akcije</th>
+            <th>Model year</th>
+            <th>License plate</th>
+            <th>Color</th>
+            <th>Capacity</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,9 +34,9 @@
                 <td>@vehicle.Color</td>
                 <td>@vehicle.Capacity</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-info btn-sm">Podrobnosti</a> |
-                    <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning btn-sm">Uredi</a> |
-                    <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                    <a asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-info btn-sm">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-warning btn-sm">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }

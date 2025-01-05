@@ -1,25 +1,26 @@
 @model IEnumerable<RideSharing.Models.Ride>
 
 @{
-    ViewData["Title"] = "Moji Prevozi";
+    ViewData["Title"] = "My rides";
+    Layout = "/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj Nov Prevoz</a>
+    <a asp-action="Create" class="btn btn-primary">Add new ride</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Voznik</th>
-            <th>Vozilo</th>
-            <th>Izvor</th>
-            <th>Destinacija</th>
-            <th>Datum Prevoza</th>
-            <th>Ustvarjeno</th>
-            <th>Posodobljeno</th>
+            <th>Driver</th>
+            <th>Vehicle</th>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th>Ride date</th>
+            <th>Created at</th>
+            <th>Updated at</th>
             <th></th>
         </tr>
     </thead>
@@ -35,9 +36,9 @@
             <td>@ride.CreatedAt.ToLocalTime().ToString("g")</td>
             <td>@ride.UpdatedAt.ToLocalTime().ToString("g")</td>
             <td>
-                <a asp-action="Details" asp-route-id="@ride.Id" class="btn btn-info btn-sm">Pregled</a>
-                <a asp-action="Edit" asp-route-id="@ride.Id" class="btn btn-warning btn-sm">Uredi</a>
-                <a asp-action="Delete" asp-route-id="@ride.Id" class="btn btn-danger btn-sm">Izbriši</a>
+                <a asp-action="Details" asp-route-id="@ride.Id" class="btn btn-info btn-sm">Details</a>
+                <a asp-action="Edit" asp-route-id="@ride.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@ride.Id" class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>
     }

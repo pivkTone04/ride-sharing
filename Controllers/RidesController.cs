@@ -91,8 +91,8 @@ namespace RideSharing.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Napaka pri shranjevanju vožnje: " + ex.Message);
-                ModelState.AddModelError("", "Prišlo je do napake pri shranjevanju vožnje.");
+                Console.WriteLine("Error saving ride: " + ex.Message);
+                ModelState.AddModelError("", "An error occurred while saving the ride.");
                 var vehicles = await _context.Vehicles
                     .Where(v => v.DriverId == user.Id)
                     .ToListAsync();
@@ -206,39 +206,51 @@ namespace RideSharing.Controllers
         }
 
         public async Task<IActionResult> Details(int? id)
-{
-    if (id == null)
-    {
-        return NotFound();
-    }
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-    var ride = await _context.Rides
-        .Include(r => r.Vehicle)
-        .Include(r => r.Driver)
-        .FirstOrDefaultAsync(r => r.Id == id);
+            var ride = await _context.Rides
+                .Include(r => r.Vehicle)
+                .Include(r => r.Driver)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
-    if (ride == null)
-    {
-        return NotFound();
-    }
+            if (ride == null)
+            {
+                return NotFound();
+            }
+            var user = await _userManager.GetUserAsync(User);
+            string userId = user?.Id;
 
-    var model = new RideDetailsViewModel
-    {
-        Id = ride.Id,
-        DriverEmail = ride.Driver.Email,
-        VehicleName = ride.Vehicle.Model,
-        Origin = ride.Origin,
-        Destination = ride.Destination,
-        RideDateTime = ride.RideDateTime,
-        AvailableSeats = ride.AvailableSeats,
-        PricePerSeat = ride.PricePerSeat,
-        PickupLocation = ride.PickupLocation,
-        RideDescription = ride.RideDescription
-    };
+            RideRequest existingRequest = null;
+            if (!string.IsNullOrEmpty(userId))
+            {
+                    existingRequest = await _context.RideRequests
+                        .Where(rr => rr.RideId == id && rr.PassengerId == userId && rr.Status != "Deleted")
+                        .OrderByDescending(rr => rr.RequestedAt)
+                        .FirstOrDefaultAsync();
+            }
 
-    return View(model);
-}
+            var model = new RideDetailsViewModel
+            {
+                Id = ride.Id,
+                DriverEmail = ride.Driver.Email,
+                DriverId = ride.DriverId,
+                VehicleName = ride.Vehicle.Model,
+                Origin = ride.Origin,
+                Destination = ride.Destination,
+                RideDateTime = ride.RideDateTime,
+                AvailableSeats = ride.AvailableSeats,
+                PricePerSeat = ride.PricePerSeat,
+                PickupLocation = ride.PickupLocation,
+                RideDescription = ride.RideDescription,
+                ExistingRequestStatus = existingRequest?.Status
+            };
 
+            return View(model);
+        }
 
         private bool RideExists(int id)
         {

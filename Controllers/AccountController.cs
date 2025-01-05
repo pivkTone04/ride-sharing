@@ -19,25 +19,24 @@ public class AccountController : Controller
         return View();
     }
 
-[HttpPost]
-public async Task<IActionResult> Login(LoginViewModel model)
-{
-    if (ModelState.IsValid)
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user != null)
+        if (ModelState.IsValid)
         {
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
-            if (result.Succeeded)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
             {
-                return RedirectToAction("Index", "Home");
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
+            ModelState.AddModelError("", "Invalid login. Check your email and password.");
         }
-        ModelState.AddModelError("", "Nepravilna prijava. Preverite e-pošto in geslo.");
+        return View(model);
     }
-    return View(model);
-}
-
 
     public IActionResult Register()
     {
@@ -59,8 +58,8 @@ public async Task<IActionResult> Login(LoginViewModel model)
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                TempData["RegistrationSuccess"] = "Uspešna registracija! Prijavite se.";
-            return RedirectToAction("Login", "Account");
+                TempData["RegistrationSuccess"] = "Successful registration! Please log in.";
+                return RedirectToAction("Login", "Account");
             }
             foreach (var error in result.Errors)
             {

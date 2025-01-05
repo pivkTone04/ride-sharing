@@ -81,7 +81,7 @@ namespace RideSharing.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (ride.DriverId == user.Id)
             {
-                ModelState.AddModelError(string.Empty, "Ne morete poslati zahteve za svoj prevoz.");
+                ModelState.AddModelError(string.Empty, "You cannot send a request for your own ride.");
 
                 var modelError = new RideRequestCreateViewModel
                 {
@@ -116,13 +116,13 @@ namespace RideSharing.Controllers
             var ride = await _context.Rides.FindAsync(model.RideId);
             if (ride == null)
             {
-                ModelState.AddModelError(string.Empty, "Prevoz ni najden.");
+                ModelState.AddModelError(string.Empty, "Ride not found.");
                 return View(model);
             }
 
             if (ride.DriverId == user.Id)
             {
-                ModelState.AddModelError(string.Empty, "Ne morete poslati zahteve za svoj prevoz.");
+                ModelState.AddModelError(string.Empty, "You cannot send a request for your own ride.");
                 return View(model);
             }
 
@@ -133,14 +133,14 @@ namespace RideSharing.Controllers
 
             if (existingRequest != null && existingRequest.Status != "Deleted")
             {
-                _logger.LogWarning("Uporabnik že ima obstoječo zahtevo.");
-                ModelState.AddModelError(string.Empty, "Že imate obstoječo zahtevo za ta prevoz.");
+                _logger.LogWarning("User already has an existing request.");
+                ModelState.AddModelError(string.Empty, "You already have an existing request for this ride.");
                 return View(model);
             }
 
             if (model.SeatsRequested > ride.AvailableSeats)
             {
-                ModelState.AddModelError(string.Empty, "Ni dovolj prostih sedežev za vašo zahtevo.");
+                ModelState.AddModelError(string.Empty, "Not enough available seats for your request.");
                 return View(model);
             }
 
@@ -160,59 +160,6 @@ namespace RideSharing.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "Home");
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rideRequest = await _context.RideRequests
-                .Include(rr => rr.Ride)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (rideRequest == null)
-            {
-                return NotFound();
-            }
-
-            return View(rideRequest);
-        }
-
-        [HttpPost, ActionName("DeleteConfirmed")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var rideRequest = await _context.RideRequests
-                .Include(rr => rr.Ride)
-                .FirstOrDefaultAsync(rr => rr.Id == id);
-
-            if (rideRequest == null)
-            {
-                _logger.LogWarning($"RideRequest z ID {id} ni bil najden.");
-                return NotFound();
-            }
-
-            if (rideRequest.Status == "Canceled" || rideRequest.Status == "Deleted")
-            {
-                _logger.LogWarning($"RideRequest z ID {id} je že bila preklicana.");
-                ModelState.AddModelError(string.Empty, "Zahteva je že bila preklicana.");
-                return View("Delete", rideRequest);
-            }
-
-            try
-            {
-                _context.RideRequests.Remove(rideRequest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.LogError(ex, $"Napaka pri brisanju RideRequest z ID {id}.");
-                ModelState.AddModelError(string.Empty, "Napaka pri brisanju zahteve. Poskusite znova.");
-                return View("Delete", rideRequest);
-            }
         }
 
         [HttpPost]
@@ -259,25 +206,25 @@ namespace RideSharing.Controllers
 
             if (rideRequest == null)
             {
-                _logger.LogWarning($"RideRequest z ID {id} ni bil najden.");
+                _logger.LogWarning($"RideRequest with ID {id} was not found.");
                 return NotFound();
             }
 
             if (rideRequest.Ride.DriverId != user.Id)
             {
-                _logger.LogWarning($"Uporabnik ni lastnik vožnje za RideRequest z ID {id}.");
+                _logger.LogWarning($"User is not the owner of the ride for RideRequest with ID {id}.");
                 return Unauthorized();
             }
 
             if (rideRequest.Status != "Pending")
             {
-                TempData["ErrorMessage"] = "Zahteva ni več v stanju 'Pending'.";
+                TempData["ErrorMessage"] = "Request is no longer in 'Pending' state.";
                 return RedirectToAction("MyIncomingRequests");
             }
 
             if (rideRequest.SeatsRequested > rideRequest.Ride.AvailableSeats)
             {
-                TempData["ErrorMessage"] = "Ni dovolj prostih sedežev za to zahtevo.";
+                TempData["ErrorMessage"] = "Not enough available seats for this request.";
                 return RedirectToAction("MyIncomingRequests");
             }
 
@@ -302,19 +249,19 @@ namespace RideSharing.Controllers
 
             if (rideRequest == null)
             {
-                _logger.LogWarning($"RideRequest z ID {id} ni bil najden.");
+                _logger.LogWarning($"RideRequest with ID {id} was not found.");
                 return NotFound();
             }
 
             if (rideRequest.Ride.DriverId != user.Id)
             {
-                _logger.LogWarning($"Uporabnik ni lastnik vožnje za RideRequest z ID {id}.");
+                _logger.LogWarning($"User is not the owner of the ride for RideRequest with ID {id}.");
                 return Unauthorized();
             }
 
             if (rideRequest.Status != "Pending")
             {
-                TempData["ErrorMessage"] = "Zahteva ni več v stanju 'Pending'.";
+                TempData["ErrorMessage"] = "Request is no longer in 'Pending' state.";
                 return RedirectToAction("MyIncomingRequests");
             }
 
@@ -325,10 +272,24 @@ namespace RideSharing.Controllers
 
             return RedirectToAction("MyIncomingRequests");
         }
+        public async Task<IActionResult> Delete(int? id)
+{
+    if (id == null)
+    {
+        return NotFound();
+    }
 
-        private bool RideRequestExists(int id)
-        {
-            return _context.RideRequests.Any(e => e.Id == id);
-        }
+    var rideRequest = await _context.RideRequests
+        .Include(rr => rr.Ride)
+        .FirstOrDefaultAsync(rr => rr.Id == id);
+    
+    if (rideRequest == null)
+    {
+        return NotFound();
+    }
+
+    return View(rideRequest);
+}
+
     }
 }

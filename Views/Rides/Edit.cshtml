@@ -1,7 +1,7 @@
 @model RideSharing.ViewModels.RideEditViewModel
 
 @{
-    ViewData["Title"] = "Uredi Vožnjo";
+    ViewData["Title"] = "Edit Vožnjo";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -72,7 +72,8 @@
     </div>
 
     <div class="form-group">
-        <input type="submit" value="Shrani" class="btn btn-primary" />
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a class="btn btn-secondary" onclick="history.back()">Back</a>
     </div>
 </form>
 

@@ -1,49 +1,59 @@
 @model RideSharing.ViewModels.RideDetailsViewModel
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<RideSharing.Models.ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Podrobnosti Prevoza";
+    ViewData["Title"] = "Ride details";
+    var currentUser = await UserManager.GetUserAsync(User);
+    bool isOwner = currentUser != null && currentUser.Id == Model.DriverId;
+    bool hasActiveRequest = Model.ExistingRequestStatus != "Deleted" && Model.ExistingRequestStatus != null;
 }
-
 <h2>@ViewData["Title"]</h2>
 
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Voznik: @Model.DriverEmail</h4>
+        <h4 class="card-title">Driver: @Model.DriverEmail</h4>
         
         <dl class="row">
-            <dt class="col-sm-3">Vozilo</dt>
+            <dt class="col-sm-3">Vehicle</dt>
             <dd class="col-sm-9">@Model.VehicleName</dd>
 
-            <dt class="col-sm-3">Izvor</dt>
+            <dt class="col-sm-3">Origin</dt>
             <dd class="col-sm-9">@Model.Origin</dd>
 
-            <dt class="col-sm-3">Destinacija</dt>
+            <dt class="col-sm-3">Destination</dt>
             <dd class="col-sm-9">@Model.Destination</dd>
 
-            <dt class="col-sm-3">Datum Prevoza</dt>
+            <dt class="col-sm-3">Ride date</dt>
             <dd class="col-sm-9">@Model.RideDateTime.ToString("dd/MM/yyyy HH:mm")</dd>
 
-            <!-- ✅ Novo polje: Prosti sedeži -->
-            <dt class="col-sm-3">Prosti sedeži</dt>
+            <dt class="col-sm-3">Empty seats</dt>
             <dd class="col-sm-9">@Model.AvailableSeats</dd>
 
-            <!-- ✅ Novo polje: Cena na sedež -->
-            <dt class="col-sm-3">Cena na sedež (€)</dt>
+            <dt class="col-sm-3">Price per seat (€)</dt>
             <dd class="col-sm-9">@Model.PricePerSeat €</dd>
 
-            <!-- ✅ Novo polje: Lokacija pobiranja -->
-            <dt class="col-sm-3">Kje te lahko poberem?</dt>
+            <dt class="col-sm-3">Possible stops</dt>
             <dd class="col-sm-9">@Model.PickupLocation</dd>
 
-            <!-- ✅ Novo polje: Opis poti -->
-            <dt class="col-sm-3">Opis poti</dt>
+            <dt class="col-sm-3">Route description</dt>
             <dd class="col-sm-9">@Model.RideDescription</dd>
         </dl>
-        <form asp-controller="RideRequests" asp-action="Create" method="post">
-            <input type="hidden" name="RideId" value="@Model.Id" />
-            <button type="submit" class="btn btn-primary">Pošlji zahtevo</button>
-        </form>
+
+        <div class="d-flex gap-2">
+            @if (isOwner)
+            {
+                <a asp-action="Delete" asp-controller="Rides" asp-route-id="@Model.Id" class="btn btn-danger">Delete Ride</a>
+            }
+            else if (!hasActiveRequest) 
+            {
+                <a asp-action="Create" asp-controller="RideRequests" asp-route-rideId="@Model.Id" class="btn btn-primary">Request a ride</a>
+            }
+            else
+            {
+                <p class="text-success mt-2 fw-bold">Request sent!</p>
+            }
+            <a class="btn btn-secondary" onclick="history.back()">Back</a>
+        </div>
     </div>
 </div>
-
-<a asp-action="Index" class="btn btn-secondary mt-3">Nazaj</a>

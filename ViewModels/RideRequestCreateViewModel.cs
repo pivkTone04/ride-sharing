@@ -13,10 +13,10 @@ namespace RideSharing.ViewModels
         public string Destination { get; set; }
 
         [Required]
-        [Range(1, 5, ErrorMessage = "Lahko rezervirate med 1 in 5 sedeži.")]
+        [Range(1, 5, ErrorMessage = "You can book between 1 and 5 seats.")]
         public int SeatsRequested { get; set; }
 
-        [StringLength(500, ErrorMessage = "Sporočilo vozniku ne sme presegati 500 znakov.")]
+        [StringLength(500, ErrorMessage = "Message to the driver must not exceed 500 characters.")]
         public string MessageToDriver { get; set; }
     }
 }

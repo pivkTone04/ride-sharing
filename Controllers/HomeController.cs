@@ -26,10 +26,20 @@ namespace RideSharing.Controllers
             var user = await _userManager.GetUserAsync(User);
             string userId = user?.Id;
             var currentDateTime = DateTime.Now;
+
+            var acceptedRides = await _context.RideRequests
+            .Where(rr => rr.PassengerId == userId && rr.Status == "Accepted")
+            .Select(rr => rr.RideId)
+            .ToListAsync();
+
             var rides = await _context.Rides
                 .Include(r => r.Vehicle)
                 .Include(r => r.Driver)
-                .Where(r => r.AvailableSeats > 0 && r.RideDateTime >= currentDateTime)
+                .Where(r => 
+                    (r.AvailableSeats > 0 && r.RideDateTime >= currentDateTime) ||
+                    acceptedRides.Contains(r.Id) ||
+                    r.DriverId == userId
+)
                 .ToListAsync();
 
             var existingRequests = await _context.RideRequests
@@ -41,11 +51,12 @@ namespace RideSharing.Controllers
             {
                 Id = r.Id,
                 DriverEmail = r.Driver?.Email,
-                VehicleName = r.Vehicle != null ? $"{r.Vehicle.Make} {r.Vehicle.Model}" : "Ni vozila",
+                VehicleName = r.Vehicle != null ? $"{r.Vehicle.Make} {r.Vehicle.Model}" : "No vehicle",
                 Origin = r.Origin,
                 Destination = r.Destination,
                 RideDateTime = r.RideDateTime,
                 AvailableSeats = r.AvailableSeats,
+                PricePerSeat = r.PricePerSeat,
                 CanRequest = r.DriverId != userId && !existingRequests.Contains(r.Id) && r.AvailableSeats > 0,
                 IsDriver = r.DriverId == userId
             }).ToList();

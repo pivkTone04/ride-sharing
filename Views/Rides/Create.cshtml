@@ -20,13 +20,13 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Origin" class="control-label">Začetni kraj vožnje</label>
+        <label asp-for="Origin" class="control-label">Origin:</label>
         <input asp-for="Origin" class="form-control" />
         <span asp-validation-for="Origin" class="text-danger"></span>
     </div>
     
     <div class="form-group">
-        <label asp-for="Destination" class="control-label">Končni kraj vožnje</label>
+        <label asp-for="Destination" class="control-label">Destination:</label>
         <input asp-for="Destination" class="form-control" />
         <span asp-validation-for="Destination" class="text-danger"></span>
     </div>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="PickupLocation" class="control-label">Možne vstopne/izstopne točke za prevoz</label>
+        <label asp-for="PickupLocation" class="control-label">Possible pickup/drop off locations:</label>
         <input asp-for="PickupLocation" class="form-control" />
         <span asp-validation-for="PickupLocation" class="text-danger"></span>
     </div>
@@ -70,7 +70,8 @@
     </div>
 
     <div class="form-group">
-        <input type="submit" value="Ustvari" class="btn btn-primary" />
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a class="btn btn-secondary" onclick="history.back()">Back</a>
     </div>
 </form>
 

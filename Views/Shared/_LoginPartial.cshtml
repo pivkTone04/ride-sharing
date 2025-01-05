@@ -5,21 +5,22 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    var currentUser = await UserManager.GetUserAsync(User); 
     <li class="nav-item">
-        <span class="nav-link text-dark">Pozdrav, @UserManager.GetUserName(User)!</span>
+        <span class="nav-link text-dark">Welcome, @currentUser.FirstName!</span>
     </li>
     <li class="nav-item">
         <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="form-inline">
-            <button type="submit" class="btn btn-link nav-link text-dark" style="cursor:pointer;">Odjava</button>
+            <button type="submit" class="btn btn-link nav-link text-dark" style="cursor:pointer;">Logout</button>
         </form>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Prijava</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Registracija</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
 }

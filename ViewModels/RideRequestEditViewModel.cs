@@ -6,13 +6,13 @@ namespace RideSharing.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Prosim, vnesite izvor (Origin).")]
+        [Required(ErrorMessage = "Please enter the origin.")]
         public string Origin { get; set; }
 
-        [Required(ErrorMessage = "Prosim, vnesite destinacijo (Destination).")]
+        [Required(ErrorMessage = "Please enter the destination.")]
         public string Destination { get; set; }
 
-        [Required(ErrorMessage = "Prosim, izberite status.")]
+        [Required(ErrorMessage = "Please select a status.")]
         public string Status { get; set; }
     }
 }
