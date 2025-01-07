@@ -34,7 +34,7 @@ namespace RideSharing.Controllers
             {
                 return Challenge();
             }
-            var currentDateTime = DateTime.Now;
+            var currentDateTime = DateTime.UtcNow;
             var userId = user.Id;
             var rides = await _context.Rides
                 .Where(r => r.DriverId == userId)
@@ -80,8 +80,8 @@ namespace RideSharing.Controllers
 
             var ride = _mapper.Map<Ride>(model);
             ride.DriverId = user.Id;
-            ride.CreatedAt = DateTime.Now;
-            ride.UpdatedAt = DateTime.Now;
+            ride.CreatedAt = DateTime.UtcNow;
+            ride.UpdatedAt = DateTime.UtcNow;
 
             _context.Add(ride);
 
@@ -151,7 +151,7 @@ namespace RideSharing.Controllers
             }
 
             _mapper.Map(model, ride);
-            ride.UpdatedAt = DateTime.Now;
+            ride.UpdatedAt = DateTime.UtcNow;
 
             try
             {

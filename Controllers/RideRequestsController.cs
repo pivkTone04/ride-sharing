@@ -150,7 +150,7 @@ namespace RideSharing.Controllers
                 Destination = model.Destination,
                 SeatsRequested = model.SeatsRequested,
                 MessageToDriver = model.MessageToDriver,
-                RequestedAt = DateTime.Now,
+                RequestedAt = DateTime.UtcNow,
                 PassengerId = user.Id,
                 RideId = model.RideId,
                 Status = "Pending"

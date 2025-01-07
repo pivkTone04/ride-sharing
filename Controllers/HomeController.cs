@@ -25,7 +25,7 @@ namespace RideSharing.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             string userId = user?.Id;
-            var currentDateTime = DateTime.Now;
+            var currentDateTime = DateTime.UtcNow;
 
             var acceptedRides = await _context.RideRequests
             .Where(rr => rr.PassengerId == userId && rr.Status == "Accepted")

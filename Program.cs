@@ -50,6 +50,14 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error"); 
     app.UseHsts();
 }
+Console.WriteLine($"Strežnikov lokalni čas: {DateTime.UtcNow}");
+Console.WriteLine($"Strežnikov UTC čas: {DateTime.UtcNow}");
+Console.WriteLine($"Časovni pas strežnika: {TimeZoneInfo.Local.Id}");
+
+Console.WriteLine($"DateTime.UtcNow: {DateTime.UtcNow}");
+Console.WriteLine($"DateTime.UtcNow: {DateTime.UtcNow}");
+Console.WriteLine($"DateTimeOffset.Now: {DateTimeOffset.Now}");
+Console.WriteLine($"DateTimeOffset.UtcNow: {DateTimeOffset.UtcNow}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -58,6 +66,11 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "vehicles_edit",
+    pattern: "Vehicles/Edit",
+    defaults: new { controller = "Vehicles", action = "Edit" });
 
 app.MapControllerRoute(
     name: "default",

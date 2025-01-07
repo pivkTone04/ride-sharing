@@ -14,7 +14,7 @@ namespace RideSharing.ViewModels
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         [Display(Name = "Ride date")]
-        public DateTime RideDateTime { get; set; } = DateTime.Now;
+        public DateTime RideDateTime { get; set; } = DateTime.UtcNow;
 
         [Required]
         [Display(Name = "Vehicle")]

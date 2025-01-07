@@ -88,8 +88,8 @@ namespace RideSharing.Controllers
                     Color = model.Color,
                     Capacity = model.Capacity,
                     DriverId = user.Id,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
                 Console.WriteLine("Vehicle data for saving:");
@@ -136,49 +136,69 @@ namespace RideSharing.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VehicleEditViewModel model)
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(IFormCollection form)
+{
+    try
+    {
+        var model = new VehicleEditViewModel
         {
-            if (id != model.Id)
-            {
-                return NotFound();
-            }
+            Id = int.TryParse(form["Id"], out var id) ? id : 0,
+            Make = form["Make"],
+            Model = form["Model"],
+            Year = int.TryParse(form["Year"], out var year) ? year : 0,
+            LicensePlate = form["LicensePlate"],
+            Color = form["Color"],
+            Capacity = int.TryParse(form["Capacity"], out var capacity) ? capacity : 0
+        };
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var vehicle = await _context.Vehicles.FindAsync(id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(model, vehicle);
-            vehicle.UpdatedAt = DateTime.Now;
-
-            try
-            {
-                _context.Update(vehicle);
-                await _context.SaveChangesAsync();
-                Console.WriteLine("Vehicle successfully updated.");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VehicleExists(vehicle.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToAction(nameof(Index));
+        if (!TryValidateModel(model))
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                          .Select(e => e.ErrorMessage)
+                                          .ToList();
+            Console.WriteLine("Errors in ModelState: " + string.Join(", ", errors));
+            return View(model);
         }
+
+        var vehicle = await _context.Vehicles.FindAsync(model.Id);
+        if (vehicle == null)
+        {
+            Console.WriteLine("Vehicle not found in database.");
+            return NotFound();
+        }
+
+        vehicle.Make = model.Make;
+        vehicle.Model = model.Model;
+        vehicle.Year = model.Year;
+        vehicle.LicensePlate = model.LicensePlate;
+        vehicle.Color = model.Color;
+        vehicle.Capacity = model.Capacity;
+        vehicle.UpdatedAt = DateTime.UtcNow;
+
+        try
+        {
+            _context.Vehicles.Update(vehicle);
+            await _context.SaveChangesAsync();
+            Console.WriteLine("Vehicle successfully updated.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving vehicle: {ex.Message}");
+            ModelState.AddModelError("", "An error occurred while saving the vehicle.");
+            return View(model);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error processing request: {ex.Message}");
+        ModelState.AddModelError("", "An unexpected error occurred.");
+        return View(new VehicleEditViewModel());
+    }
+}
 
         public async Task<IActionResult> Delete(int? id)
         {

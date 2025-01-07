@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "msVAIxCe9ojB6swIGl+NbHqm/Y/VDR+TivqB01OjzXk=",
+  "Hash": "Hddvi9qp93oIAYkr3ED6qRomLO5fFw5lRnYk/zTAb2E=",
   "Source": "RideSharing",
   "BasePath": "_content/RideSharing",
   "Mode": "Default",
@@ -2333,6 +2333,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\wwwroot\\web.config",
+      "SourceId": "RideSharing",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\wwwroot\\",
+      "BasePath": "_content/RideSharing",
+      "RelativePath": "web.config",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\web.config"
     }
   ]
 }
