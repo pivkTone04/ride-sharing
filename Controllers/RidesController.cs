@@ -10,6 +10,7 @@ using RideSharing.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using RideSharing.Services;
 
 namespace RideSharing.Controllers
 {
@@ -19,12 +20,14 @@ namespace RideSharing.Controllers
         private readonly RideSharingContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly GoogleMapsService _googleMapsService;
 
-        public RidesController(RideSharingContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public RidesController(RideSharingContext context, UserManager<ApplicationUser> userManager, IMapper mapper, GoogleMapsService googleMapsService)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
+            _googleMapsService = googleMapsService;
         }
 
         public async Task<IActionResult> Index()
@@ -256,5 +259,37 @@ namespace RideSharing.Controllers
         {
             return _context.Rides.Any(e => e.Id == id);
         }
-    }
+        [HttpGet]
+        [Route("api/maps/getRouteInfo")]
+        public async Task<IActionResult> GetRouteInfo(string origin, string destination)
+        {
+            if (string.IsNullOrEmpty(origin) || string.IsNullOrEmpty(destination))
+             {
+                return BadRequest(new { message = "Origin and destination are required." });
+            }
+
+            try
+            {
+                var googleMapsService = HttpContext.RequestServices.GetService(typeof(GoogleMapsService)) as GoogleMapsService;
+                if (googleMapsService == null)
+                {
+                    return StatusCode(500, new { message = "Google Maps service is not available." });
+                }
+
+                var directions = await googleMapsService.GetDirectionsAsync(origin, destination);
+                var rideData = googleMapsService.ExtractRideData(directions);
+
+                return Ok(new 
+                {
+                    totalDistance = rideData.TotalDistance,
+                    totalDuration = rideData.TotalDuration
+                });
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching route data." });
+            }
+}
+
+}
 }

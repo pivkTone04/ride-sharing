@@ -43,5 +43,8 @@ namespace RideSharing.Models
 
         [StringLength(500, ErrorMessage = "Route description must not exceed 500 characters.")]
         public string RideDescription { get; set; }
+        public string TotalDistance { get; set; }
+
+        public string TotalDuration { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 @model RideSharing.ViewModels.RideCreateViewModel
 
 @{
-    ViewData["Title"] = "Ustvari Novo Vožnjo";
+    ViewData["Title"] = "Create New Ride";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -21,26 +21,39 @@
 <form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="Origin" class="control-label">Origin:</label>
-        <input asp-for="Origin" class="form-control" />
+        <input asp-for="Origin" class="form-control" id="originInput" />
         <span asp-validation-for="Origin" class="text-danger"></span>
     </div>
     
     <div class="form-group">
         <label asp-for="Destination" class="control-label">Destination:</label>
-        <input asp-for="Destination" class="form-control" />
+        <input asp-for="Destination" class="form-control" id="destinationInput" />
         <span asp-validation-for="Destination" class="text-danger"></span>
     </div>
-    
+
+    <!-- 🔹 Button to Fetch Distance & Duration -->
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" onclick="fetchRouteInfo()">Get Route Info</button>
+    </div>
+
+    <!-- 🔹 Display Fetched Distance & Duration -->
+    <div class="form-group">
+        <label>Total Distance:</label> <span id="totalDistance">N/A</span>
+    </div>
+    <div class="form-group">
+        <label>Total Duration:</label> <span id="totalDuration">N/A</span>
+    </div>
+
     <div class="form-group">
         <label asp-for="RideDateTime" class="control-label"></label>
-        <input asp-for="RideDateTime" class="form-control" type="datetime-local"step="60"/>
+        <input asp-for="RideDateTime" class="form-control" type="datetime-local" step="60"/>
         <span asp-validation-for="RideDateTime" class="text-danger"></span>
     </div>
     
     <div class="form-group">
         <label asp-for="VehicleId" class="control-label"></label>
         <select asp-for="VehicleId" class="form-control" asp-items="ViewBag.Vehicles">
-            <option value="">-- Izberite vozilo --</option>
+            <option value="">-- Select Vehicle --</option>
         </select>
         <span asp-validation-for="VehicleId" class="text-danger"></span>
     </div>
@@ -78,16 +91,32 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script>
-    document.getElementById("VehicleId").addEventListener("change", function () {
-        var vehicleId = this.value;
-        fetch('/Vehicles/GetMaxSeats?vehicleId=' + vehicleId)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("AvailableSeats").max = data.maxSeats;
-            });
-    });
-</script>
+    <script>
+        function fetchRouteInfo() {
+            var origin = document.getElementById("originInput").value;
+            var destination = document.getElementById("destinationInput").value;
 
+            if (!origin || !destination) {
+                alert("Please enter both origin and destination.");
+                return;
+            }
+
+            fetch(`/api/maps/getRouteInfo?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.totalDistance && data.totalDuration) {
+                        document.getElementById("totalDistance").innerText = data.totalDistance;
+                        document.getElementById("totalDuration").innerText = data.totalDuration;
+                    } else {
+                        document.getElementById("totalDistance").innerText = "N/A";
+                        document.getElementById("totalDuration").innerText = "N/A";
+                        alert("Failed to fetch route information. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching route info:", error);
+                    alert("An error occurred while fetching route data.");
+                });
+        }
+    </script>
 }
-

@@ -4,8 +4,12 @@ using RideSharing.Models;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using RideSharing.ViewModels;
+using RideSharing.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<GoogleMapsService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -47,17 +51,9 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error"); 
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-Console.WriteLine($"Strežnikov lokalni čas: {DateTime.UtcNow}");
-Console.WriteLine($"Strežnikov UTC čas: {DateTime.UtcNow}");
-Console.WriteLine($"Časovni pas strežnika: {TimeZoneInfo.Local.Id}");
-
-Console.WriteLine($"DateTime.UtcNow: {DateTime.UtcNow}");
-Console.WriteLine($"DateTime.UtcNow: {DateTime.UtcNow}");
-Console.WriteLine($"DateTimeOffset.Now: {DateTimeOffset.Now}");
-Console.WriteLine($"DateTimeOffset.UtcNow: {DateTimeOffset.UtcNow}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
