@@ -21,12 +21,14 @@
             <th>Ride date</th>
             <th>Created at</th>
             <th>Updated at</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
     @foreach (var ride in Model)
     {
+        bool hasAcceptedRequest = ride.RideRequests != null && ride.RideRequests.Any(rr => rr.Status == "Accepted" || rr.Status == "Pending");
+
         <tr>
             <td>@ride.Driver?.UserName</td>
             <td>@ride.Vehicle?.Make @ride.Vehicle?.Model</td>
@@ -37,7 +39,16 @@
             <td>@ride.UpdatedAt.ToLocalTime().ToString("g")</td>
             <td>
                 <a asp-action="Details" asp-route-id="@ride.Id" class="btn btn-info btn-sm">Details</a>
-                <a asp-action="Edit" asp-route-id="@ride.Id" class="btn btn-warning btn-sm">Edit</a>
+                
+                @if (hasAcceptedRequest)
+                {
+                    <button class="btn btn-warning btn-sm" disabled>Edit (Request exists)</button>
+                }
+                else
+                {
+                    <a asp-action="Edit" asp-route-id="@ride.Id" class="btn btn-warning btn-sm">Edit</a>
+                }
+
                 <a asp-action="Delete" asp-route-id="@ride.Id" class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>

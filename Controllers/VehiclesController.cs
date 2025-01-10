@@ -37,6 +37,7 @@ namespace RideSharing.Controllers
             var userId = user.Id;
             var vehicles = await _context.Vehicles
                 .Where(v => v.DriverId == userId)
+                .Include(v => v.Rides)
                 .ToListAsync();
 
             return View(vehicles);
@@ -254,6 +255,7 @@ public async Task<IActionResult> Edit(IFormCollection form)
             }
 
              var vehicle = await _context.Vehicles
+                .Include(v => v.Rides)
                 .FirstOrDefaultAsync(v => v.Id == id);
 
             if (vehicle == null)

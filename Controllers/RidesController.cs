@@ -42,6 +42,7 @@ namespace RideSharing.Controllers
             var rides = await _context.Rides
                 .Where(r => r.DriverId == userId)
                 .Include(r => r.Vehicle)
+                 .Include(r => r.RideRequests)
                 .ToListAsync();
 
             return View(rides);
@@ -79,6 +80,15 @@ namespace RideSharing.Controllers
             if (user == null)
             {
                 return Unauthorized();
+            }
+
+            var selectedVehicle = await _context.Vehicles.FindAsync(model.VehicleId);
+            if (selectedVehicle != null && model.AvailableSeats > selectedVehicle.Capacity)
+            {
+                ModelState.AddModelError("AvailableSeats", "Available seats cannot exceed the vehicle capacity.");
+                ViewBag.Vehicles = new SelectList(await _context.Vehicles
+                    .Where(v => v.DriverId == user.Id).ToListAsync(), "Id", "LicensePlate", model.VehicleId);
+                return View(model);
             }
 
             var ride = _mapper.Map<Ride>(model);
@@ -153,6 +163,15 @@ namespace RideSharing.Controllers
                 return NotFound();
             }
 
+            var selectedVehicle = await _context.Vehicles.FindAsync(model.VehicleId);
+            if (selectedVehicle != null && model.AvailableSeats > selectedVehicle.Capacity)
+            {
+                ModelState.AddModelError("AvailableSeats", "Available seats cannot exceed the vehicle capacity.");
+                ViewBag.Vehicles = new SelectList(await _context.Vehicles
+                    .Where(v => v.DriverId == _userManager.GetUserId(User)).ToListAsync(), "Id", "LicensePlate", model.VehicleId);
+                return View(model);
+            }
+
             _mapper.Map(model, ride);
             ride.UpdatedAt = DateTime.UtcNow;
 
@@ -218,6 +237,7 @@ namespace RideSharing.Controllers
             var ride = await _context.Rides
                 .Include(r => r.Vehicle)
                 .Include(r => r.Driver)
+                .Include(r => r.RideRequests)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (ride == null)
@@ -235,6 +255,9 @@ namespace RideSharing.Controllers
                         .OrderByDescending(rr => rr.RequestedAt)
                         .FirstOrDefaultAsync();
             }
+
+            bool hasAcceptedRequest = ride.RideRequests.Any(rr => rr.Status == "Accepted" || rr.Status == "Pending");
+            ViewBag.HasAcceptedRequest = hasAcceptedRequest;
 
             var model = new RideDetailsViewModel
             {

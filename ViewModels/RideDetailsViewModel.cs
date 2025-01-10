@@ -19,4 +19,5 @@ namespace RideSharing.ViewModels
         public string TotalDistance { get; set; }
         public string TotalDuration { get; set; }
     }
+    
 }

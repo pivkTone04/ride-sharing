@@ -125,6 +125,12 @@ namespace RideSharing.Controllers
                 ModelState.AddModelError(string.Empty, "You cannot send a request for your own ride.");
                 return View(model);
             }
+            
+            if (model.SeatsRequested > ride.AvailableSeats)
+            {
+                ModelState.AddModelError("SeatsRequested", "You cannot request more seats than available.");
+                return View(model);
+            }
 
             var existingRequest = await _context.RideRequests
                 .Where(rr => rr.RideId == model.RideId && rr.PassengerId == user.Id)
@@ -133,7 +139,7 @@ namespace RideSharing.Controllers
 
             if (existingRequest != null && existingRequest.Status != "Deleted")
             {
-                _logger.LogWarning("User already has an existing request.");
+                string statusMessage = $"Your existing request is currently '{existingRequest.Status}'.";
                 ModelState.AddModelError(string.Empty, "You already have an existing request for this ride.");
                 return View(model);
             }

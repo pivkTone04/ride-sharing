@@ -37,12 +37,12 @@
                     {
                         <form asp-controller="RideRequests" asp-action="Accept" method="post" style="display:inline;">
                             <input type="hidden" name="id" value="@request.Id" />
-                            <button type="submit" class="btn btn-success">Sprejmi</button>
+                            <button type="submit" class="btn btn-success">Accept</button>
                         </form>
 
                         <form asp-controller="RideRequests" asp-action="Reject" method="post" style="display:inline;">
                             <input type="hidden" name="id" value="@request.Id" />
-                            <button type="submit" class="btn btn-danger">Zavrni</button>
+                            <button type="submit" class="btn btn-danger">Reject</button>
                         </form>
                     }
                 </td>

@@ -7,6 +7,7 @@
     var currentUser = await UserManager.GetUserAsync(User);
     bool isOwner = currentUser != null && currentUser.Id == Model.DriverId;
     bool hasActiveRequest = Model.ExistingRequestStatus != "Deleted" && Model.ExistingRequestStatus != null;
+    bool hasAcceptedRequest = ViewBag.HasAcceptedRequest as bool? ?? false;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -51,6 +52,15 @@
             @if (isOwner)
             {
                 <a asp-action="Delete" asp-controller="Rides" asp-route-id="@Model.Id" class="btn btn-danger">Delete Ride</a>
+
+                @if (hasAcceptedRequest)
+                {
+                    <button class="btn btn-warning" disabled>Edit Ride (Request exists)</button>
+                }
+                else
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Ride</a>
+                }
             }
             else if (!hasActiveRequest) 
             {
