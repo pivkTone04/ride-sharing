@@ -15,7 +15,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllersWithViews();
 
-var connectionString = builder.Configuration.GetConnectionString("RideSharingContext") 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? throw new InvalidOperationException("Connection string 'RideSharingContext' not found.");
 
 builder.Services.AddDbContext<RideSharingContext>(options =>
