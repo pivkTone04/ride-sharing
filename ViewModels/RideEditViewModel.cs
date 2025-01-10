@@ -40,5 +40,7 @@ namespace RideSharing.ViewModels
         [StringLength(500, ErrorMessage = "Route description ne sme biti daljši od 500 znakov.")]
         [Display(Name = "Route description")]
         public string RideDescription { get; set; }
+        public string TotalDistance { get; set; }
+        public string TotalDuration { get; set; }
     }
 }

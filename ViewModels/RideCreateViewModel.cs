@@ -40,9 +40,9 @@ namespace RideSharing.ViewModels
         public string RideDescription { get; set; }
 
         [Display(Name = "Total Distance")]
-         public string TotalDistance { get; set; } = "N/A";
+         public string TotalDistance { get; set; } = "";
 
         [Display(Name = "Total Duration")]
-        public string TotalDuration { get; set; } = "N/A";
+        public string TotalDuration { get; set; } = "";
     }
 }

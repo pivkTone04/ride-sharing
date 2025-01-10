@@ -20,17 +20,33 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
-    
+
     <div class="form-group">
         <label asp-for="Origin" class="control-label"></label>
-        <input asp-for="Origin" class="form-control" />
+        <input asp-for="Origin" class="form-control" id="originInput" />
         <span asp-validation-for="Origin" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Destination" class="control-label"></label>
-        <input asp-for="Destination" class="form-control" />
+        <input asp-for="Destination" class="form-control" id="destinationInput" />
         <span asp-validation-for="Destination" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" onclick="fetchRouteInfo()">Get Route Info</button>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalDistance" class="control-label">Total Distance:</label>
+        <input asp-for="TotalDistance" class="form-control" id="totalDistance" value="@Model.TotalDistance"/>
+        <span asp-validation-for="TotalDistance" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TotalDuration" class="control-label">Total Duration:</label>
+        <input asp-for="TotalDuration" class="form-control" id="totalDuration" value="@Model.TotalDuration"/>
+        <span asp-validation-for="TotalDuration" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -79,4 +95,31 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function fetchRouteInfo() {
+            var origin = document.getElementById("originInput").value;
+            var destination = document.getElementById("destinationInput").value;
+
+            if (!origin || !destination) {
+                alert("Please enter both origin and destination.");
+                return;
+            }
+
+            fetch(`/api/maps/getRouteInfo?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.totalDistance && data.totalDuration) {
+                        document.getElementById("totalDistance").value = data.totalDistance;
+                        document.getElementById("totalDuration").value = data.totalDuration;
+                    } else {
+                        alert("Failed to fetch route information. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching route info:", error);
+                    alert("An error occurred while fetching route data.");
+                });
+        }
+    </script>
 }

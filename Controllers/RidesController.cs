@@ -249,7 +249,9 @@ namespace RideSharing.Controllers
                 PricePerSeat = ride.PricePerSeat,
                 PickupLocation = ride.PickupLocation,
                 RideDescription = ride.RideDescription,
-                ExistingRequestStatus = existingRequest?.Status
+                ExistingRequestStatus = existingRequest?.Status,
+                TotalDistance = ride.TotalDistance,
+                TotalDuration = ride.TotalDuration
             };
 
             return View(model);

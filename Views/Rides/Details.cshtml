@@ -8,6 +8,7 @@
     bool isOwner = currentUser != null && currentUser.Id == Model.DriverId;
     bool hasActiveRequest = Model.ExistingRequestStatus != "Deleted" && Model.ExistingRequestStatus != null;
 }
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="card">
@@ -15,29 +16,35 @@
         <h4 class="card-title">Driver: @Model.DriverEmail</h4>
         
         <dl class="row">
-            <dt class="col-sm-3">Vehicle</dt>
+            <dt class="col-sm-3 fw-bold">Vehicle:</dt>
             <dd class="col-sm-9">@Model.VehicleName</dd>
 
-            <dt class="col-sm-3">Origin</dt>
+            <dt class="col-sm-3 fw-bold">Origin:</dt>
             <dd class="col-sm-9">@Model.Origin</dd>
 
-            <dt class="col-sm-3">Destination</dt>
+            <dt class="col-sm-3 fw-bold">Destination:</dt>
             <dd class="col-sm-9">@Model.Destination</dd>
 
-            <dt class="col-sm-3">Ride date</dt>
+            <dt class="col-sm-3 fw-bold">Ride date:</dt>
             <dd class="col-sm-9">@Model.RideDateTime.ToString("dd/MM/yyyy HH:mm")</dd>
 
-            <dt class="col-sm-3">Empty seats</dt>
+            <dt class="col-sm-3 fw-bold">Empty seats:</dt>
             <dd class="col-sm-9">@Model.AvailableSeats</dd>
 
-            <dt class="col-sm-3">Price per seat (€)</dt>
+            <dt class="col-sm-3 fw-bold">Price per seat (€):</dt>
             <dd class="col-sm-9">@Model.PricePerSeat €</dd>
 
-            <dt class="col-sm-3">Possible stops</dt>
+            <dt class="col-sm-3 fw-bold">Possible stops:</dt>
             <dd class="col-sm-9">@Model.PickupLocation</dd>
 
-            <dt class="col-sm-3">Route description</dt>
+            <dt class="col-sm-3 fw-bold">Route description:</dt>
             <dd class="col-sm-9">@Model.RideDescription</dd>
+
+            <dt class="col-sm-3 fw-bold">Estimated distance:</dt>
+            <dd class="col-sm-9">@Model.TotalDistance</dd>
+
+            <dt class="col-sm-3 fw-bold">Estimated duration:</dt>
+            <dd class="col-sm-9">@Model.TotalDuration</dd>
         </dl>
 
         <div class="d-flex gap-2">

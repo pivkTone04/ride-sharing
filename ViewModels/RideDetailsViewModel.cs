@@ -16,5 +16,7 @@ namespace RideSharing.ViewModels
         public string PickupLocation { get; set; }
         public string RideDescription { get; set; }
         public string ExistingRequestStatus { get; set; }
+        public string TotalDistance { get; set; }
+        public string TotalDuration { get; set; }
     }
 }
