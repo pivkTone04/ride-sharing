@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\RideSharing.csproj": {}
+    "C:\\Users\\ToneP\\Desktop\\rideSharing\\RideSharing\\RideSharing.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\RideSharing.csproj": {
+    "C:\\Users\\ToneP\\Desktop\\rideSharing\\RideSharing\\RideSharing.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\RideSharing.csproj",
+        "projectUniqueName": "C:\\Users\\ToneP\\Desktop\\rideSharing\\RideSharing\\RideSharing.csproj",
         "projectName": "RideSharing",
-        "projectPath": "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\RideSharing.csproj",
-        "packagesPath": "C:\\Users\\lanco\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lanco\\OneDrive\\Namizje\\Skol\\IS\\RideSharing\\obj\\",
+        "projectPath": "C:\\Users\\ToneP\\Desktop\\rideSharing\\RideSharing\\RideSharing.csproj",
+        "packagesPath": "C:\\Users\\ToneP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ToneP\\Desktop\\rideSharing\\RideSharing\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\lanco\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\ToneP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -63,21 +64,21 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.*, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.*, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.*, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.*, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -95,6 +96,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -103,7 +122,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
